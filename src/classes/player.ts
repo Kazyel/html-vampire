@@ -1,4 +1,5 @@
 import type Enemy from "./enemy";
+
 import GameEntityObject from "./game-entity-object";
 import Weapon from "./weapon";
 
@@ -6,7 +7,6 @@ interface IPlayer {
   damageCooldown: number;
   hitboxPadding: number;
   weapons: Array<Weapon>;
-
   checkEnemyCollision: (enemy: GameEntityObject) => void;
   updateDamageCooldown: (deltaTime: number) => void;
   takeDamage: (damageTaken: number) => void;
@@ -14,8 +14,8 @@ interface IPlayer {
 }
 
 const DEFAULT_PLAYER_HEALTH = 15;
-const DEFAULT_PLAYER_SPEED = 400;
-const PLAYER_INVULNERABILITY_TIME = 500;
+const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
+const PLAYER_INVULNERABILITY_TIME = 500; // -> milliseconds
 
 export default class Player extends GameEntityObject implements IPlayer {
   weapons: Array<Weapon>;

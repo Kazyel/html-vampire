@@ -3,7 +3,6 @@ import GameEntityObject from "./game-entity-object";
 interface IEnemy {
   damage: number;
   shouldRemove: boolean;
-
   takeDamage: (damageTaken: number) => void;
 }
 

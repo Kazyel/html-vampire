@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 import { useGameContext } from "@/context/game-context";
 
 import usePlayerMovement from "@/game/player-movement";
-import { checkEnemyHit } from "@/game/collision-checks";
+import { checkEnemyHit } from "@/game/collisions";
 
-import render from "@/game/render";
-import entityCleaner from "@/game/entity-cleaner";
 import handleProjectiles from "@/game/projectile-handler";
+import checkMapBounds from "@/game/check-map-bounds";
+import entityCleaner from "@/game/entity-cleaner";
+import render from "@/game/render";
 
 const Canvas = () => {
   const ctx = useGameContext();
@@ -28,6 +29,8 @@ const Canvas = () => {
 
       while (ctx.logicTimer >= ctx.LOGIC_TICK) {
         handlePlayerMovement(ctx);
+        checkMapBounds(ctx.player);
+
         checkEnemyHit(ctx);
         handleProjectiles(ctx);
 

@@ -1,4 +1,6 @@
 import type GlobalGameState from "./game-state";
+import type Enemy from "./enemy";
+
 import Projectile from "./projectile";
 
 interface IWeapon {
@@ -8,7 +10,7 @@ interface IWeapon {
   attackSpeed: number;
 }
 
-const DEFAULT_ATTACK_SPEED = 1000;
+const DEFAULT_ATTACK_SPEED = 1000; // -> milliseconds
 
 export default class Weapon implements IWeapon {
   name: string;
@@ -33,9 +35,7 @@ export default class Weapon implements IWeapon {
     return false;
   }
 
-  createProjectile(ctx: GlobalGameState) {
-    const nearestEnemy = ctx.player.findNearestEnemy(ctx.enemies);
-
+  createProjectile(ctx: GlobalGameState, nearestEnemy: Enemy) {
     if (nearestEnemy) {
       const dx = nearestEnemy.x - ctx.player.x;
       const dy = nearestEnemy.y - ctx.player.y;

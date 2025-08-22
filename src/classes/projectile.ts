@@ -1,5 +1,6 @@
-import GameEntityObject from "./game-entity-object";
 import type GlobalGameState from "./game-state";
+
+import GameEntityObject from "./game-entity-object";
 
 interface IProjectile {
   damage: number;
@@ -14,8 +15,8 @@ interface IProjectile {
   updateAndCheckExpiration: (tick: number) => void;
 }
 
-const DEFAULT_DURATION = 2000;
-const DEFAULT_PROJECTILE_SPEED = 1000;
+const DEFAULT_DURATION = 2000; // -> milliseconds
+const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
 
 export default class Projectile extends GameEntityObject implements IProjectile {
   duration: number;

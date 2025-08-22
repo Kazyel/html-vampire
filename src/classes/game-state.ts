@@ -1,49 +1,50 @@
+import type { GameUIEvent } from "@/types/events";
+
 import Enemy from "./enemy";
 import Player from "./player";
 import Projectile from "./projectile";
-
-type UIEvent = {
-  event: string;
-  callback: () => void;
-};
+import Camera from "./camera";
+import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
 
 interface IGameState {
   player: Player;
+  camera: Camera;
   enemies: Array<Enemy>;
   projectiles: Array<Projectile>;
   lastTimestamp: number;
   deltaTime: number;
   logicTimer: number;
-  UIListeners: Array<UIEvent>;
+  UIListeners: Array<GameUIEvent>;
+  LOGIC_TICK: number;
 
   emitEvent: () => void;
   subscribe: (event: string, callback: () => void) => void;
   unsubscribe: (event: string, callback: () => void) => void;
 }
 
-const MAP_WIDTH = 1600;
-const MAP_HEIGHT = 800;
+const GAME_LOGIC_TICK = 1000 / 60; // -> 60 FPS
 
 export default class GlobalGameState implements IGameState {
-  LOGIC_TICK = 1000 / 60;
+  LOGIC_TICK = GAME_LOGIC_TICK;
 
   player: Player;
+  camera: Camera;
   enemies: Array<Enemy>;
   projectiles: Array<Projectile>;
   lastTimestamp: number;
   deltaTime: number;
   logicTimer: number;
-
-  UIListeners: Array<UIEvent>;
+  UIListeners: Array<GameUIEvent>;
 
   constructor() {
+    this.camera = new Camera(0, 0);
     this.player = new Player(MAP_WIDTH / 2, MAP_HEIGHT / 2, "red");
-    this.enemies = [new Enemy(50, 50, "blue"), new Enemy(1300, 50, "blue")];
+    this.enemies = [new Enemy(0, 0, "blue"), new Enemy(1975, 1175, "blue")];
     this.projectiles = [];
 
-    this.lastTimestamp = 0;
     this.deltaTime = 0;
     this.logicTimer = 0;
+    this.lastTimestamp = 0;
 
     this.UIListeners = [];
   }
