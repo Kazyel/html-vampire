@@ -5,8 +5,10 @@ import { GameUI } from "./components/game-ui";
 function App() {
   return (
     <GameProvider>
-      <Canvas />
-      <GameUI />
+      <div className="size-full flex flex-col items-center justify-center">
+        <Canvas />
+        <GameUI />
+      </div>
     </GameProvider>
   );
 }

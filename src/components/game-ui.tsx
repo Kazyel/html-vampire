@@ -11,9 +11,9 @@ export const GameUI = () => {
       setPlayerHealth(gameContext.player.health);
     };
 
-    gameContext.addUIListener("healthChange", handleHealthUpdate);
+    gameContext.subscribe("healthChange", handleHealthUpdate);
     return () => {
-      gameContext.removeUIListener("healthChange", handleHealthUpdate);
+      gameContext.unsubscribe("healthChange", handleHealthUpdate);
     };
   }, [gameContext]);
 

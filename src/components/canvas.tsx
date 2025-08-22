@@ -63,7 +63,7 @@ const Canvas = () => {
 
       if (hasCollided && gameState.player.damageCooldown <= 0) {
         player.takeDamage(1);
-        gameState.notifyUI();
+        gameState.emitEvent();
       }
     }
 
@@ -96,7 +96,14 @@ const Canvas = () => {
     gameLoop(timeRef.current);
   }, [gameLoop]);
 
-  return <canvas ref={canvasRef}></canvas>;
+  return (
+    <canvas
+      className="border-2 rounded-md mt-10"
+      width={1600}
+      height={900}
+      ref={canvasRef}
+    ></canvas>
+  );
 };
 
 export default Canvas;
