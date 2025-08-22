@@ -44,9 +44,9 @@ export default class GameEntityObject implements IGameEntity {
     context.fillRect(this.x, this.y, this.width, this.height);
   };
 
-  moveEntity(x: number, y: number, deltaTime: number): void {
-    this.x += x * (deltaTime / 1000);
-    this.y += y * (deltaTime / 1000);
+  moveEntity(x: number, y: number, tick: number): void {
+    this.x += x * (tick / 1000);
+    this.y += y * (tick / 1000);
   }
 
   growEntity(width: number, height: number): void {

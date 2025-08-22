@@ -1,12 +1,16 @@
+import type Enemy from "./enemy";
 import GameEntityObject from "./game-entity-object";
+import Weapon from "./weapon";
 
 interface IPlayer {
   damageCooldown: number;
   hitboxPadding: number;
+  weapons: Array<Weapon>;
 
   checkEnemyCollision: (enemy: GameEntityObject) => void;
   updateDamageCooldown: (deltaTime: number) => void;
   takeDamage: (damageTaken: number) => void;
+  findNearestEnemy: (enemies: Enemy[]) => Enemy | null;
 }
 
 const DEFAULT_PLAYER_HEALTH = 15;
@@ -14,6 +18,7 @@ const DEFAULT_PLAYER_SPEED = 400;
 const PLAYER_INVULNERABILITY_TIME = 500;
 
 export default class Player extends GameEntityObject implements IPlayer {
+  weapons: Array<Weapon>;
   damageCooldown: number;
   hitboxPadding: number;
 
@@ -22,6 +27,8 @@ export default class Player extends GameEntityObject implements IPlayer {
 
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
+    this.weapons = [new Weapon("AK-47", 5)];
+
     this.hitboxPadding = 3;
     this.damageCooldown = 0;
   }
@@ -31,9 +38,9 @@ export default class Player extends GameEntityObject implements IPlayer {
     this.damageCooldown = PLAYER_INVULNERABILITY_TIME;
   }
 
-  updateDamageCooldown(deltaTime: number) {
+  updateDamageCooldown(tick: number) {
     if (this.damageCooldown > 0) {
-      this.damageCooldown -= deltaTime;
+      this.damageCooldown -= tick;
     }
   }
 
@@ -46,5 +53,27 @@ export default class Player extends GameEntityObject implements IPlayer {
     const isTouchingX = leftSize && rightSize;
     const isTouchingY = topSize && bottomSize;
     return isTouchingX && isTouchingY;
+  }
+
+  findNearestEnemy(enemies: Enemy[]): Enemy | null {
+    if (enemies.length === 0) {
+      return null;
+    }
+
+    let nearestEnemy = enemies[0];
+    let minDistance = Infinity;
+
+    enemies.forEach((enemy) => {
+      const dx = enemy.x - this.x;
+      const dy = enemy.y - this.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestEnemy = enemy;
+      }
+    });
+
+    return nearestEnemy;
   }
 }

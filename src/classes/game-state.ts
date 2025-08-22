@@ -1,5 +1,6 @@
 import Enemy from "./enemy";
 import Player from "./player";
+import Projectile from "./projectile";
 
 type UIEvent = {
   event: string;
@@ -9,8 +10,10 @@ type UIEvent = {
 interface IGameState {
   player: Player;
   enemies: Array<Enemy>;
+  projectiles: Array<Projectile>;
   lastTimestamp: number;
   deltaTime: number;
+  logicTimer: number;
   UIListeners: Array<UIEvent>;
 
   emitEvent: () => void;
@@ -22,20 +25,25 @@ const MAP_WIDTH = 1600;
 const MAP_HEIGHT = 800;
 
 export default class GlobalGameState implements IGameState {
+  LOGIC_TICK = 1000 / 60;
+
   player: Player;
   enemies: Array<Enemy>;
-
+  projectiles: Array<Projectile>;
   lastTimestamp: number;
   deltaTime: number;
+  logicTimer: number;
 
   UIListeners: Array<UIEvent>;
 
   constructor() {
     this.player = new Player(MAP_WIDTH / 2, MAP_HEIGHT / 2, "red");
-    this.enemies = [new Enemy(50, 50, "blue")];
+    this.enemies = [new Enemy(50, 50, "blue"), new Enemy(1300, 50, "blue")];
+    this.projectiles = [];
 
     this.lastTimestamp = 0;
     this.deltaTime = 0;
+    this.logicTimer = 0;
 
     this.UIListeners = [];
   }
