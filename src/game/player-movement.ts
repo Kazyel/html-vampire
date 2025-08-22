@@ -1,16 +1,10 @@
 import type GlobalGameState from "@/classes/game-state";
+import type { MovementKeys } from "@/types/events";
 
 import { useEffect, useRef } from "react";
 
-type AvailableKeys = {
-  ArrowUp: boolean;
-  ArrowDown: boolean;
-  ArrowLeft: boolean;
-  ArrowRight: boolean;
-};
-
 const usePlayerMovement = () => {
-  const keysPressed = useRef<AvailableKeys>({
+  const keysPressed = useRef<MovementKeys>({
     ArrowDown: false,
     ArrowLeft: false,
     ArrowRight: false,
@@ -19,10 +13,10 @@ const usePlayerMovement = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      keysPressed.current[e.key as keyof AvailableKeys] = true;
+      keysPressed.current[e.key as keyof MovementKeys] = true;
     };
     const handleKeyUp = (e: KeyboardEvent) => {
-      keysPressed.current[e.key as keyof AvailableKeys] = false;
+      keysPressed.current[e.key as keyof MovementKeys] = false;
     };
 
     window.addEventListener("keydown", handleKeyDown);
