@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import GlobalGameState from "../classes/game-state";
+import GlobalGameState from "@/classes/game-state";
 
 const GameContext = createContext<GlobalGameState | undefined>(undefined);
 

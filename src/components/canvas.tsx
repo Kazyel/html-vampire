@@ -1,100 +1,40 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useGameContext } from "@/context/game-context";
 
-import GameEntityObject from "../classes/game-entity-object";
-import { useGameContext } from "../context/game-context";
-
-type AvailableKeys = {
-  ArrowUp: boolean;
-  ArrowDown: boolean;
-  ArrowLeft: boolean;
-  ArrowRight: boolean;
-};
-
-const ENEMY_ENTITY = new GameEntityObject(50, 50, "blue");
+import usePlayerMovement from "@/game/player-movement";
+import checkAndApplyDamage from "@/game/collision-check";
+import render from "@/game/render";
 
 const Canvas = () => {
-  const gameContext = useGameContext();
-
+  const ctx = useGameContext();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const enemiesRef = useRef<Array<GameEntityObject>>([ENEMY_ENTITY]);
-  const gameStateRef = useRef(gameContext);
-  const timeRef = useRef<number>(0);
+  const gameLoopRef = useRef<(timestamp: number) => void | null>(null);
 
-  const keysPressed = useRef<AvailableKeys>({
-    ArrowDown: false,
-    ArrowLeft: false,
-    ArrowRight: false,
-    ArrowUp: false,
+  const movePlayer = usePlayerMovement();
+
+  useEffect(() => {
+    gameLoopRef.current = (timestamp: number) => {
+      const canvas = canvasRef.current;
+
+      if (!canvas || !ctx) {
+        return;
+      }
+
+      ctx.updateTime(timestamp);
+      render(canvas, ctx);
+      movePlayer(ctx.deltaTime, ctx.player);
+      checkAndApplyDamage(ctx.enemies, ctx);
+
+      requestAnimationFrame(gameLoopRef.current!);
+    };
   });
 
-  const gameLoop = useCallback((timestamp: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
+  useEffect(() => {
+    if (!gameLoopRef.current) {
       return;
     }
-    const canvasContext = canvas.getContext("2d");
-    if (!canvasContext) {
-      return;
-    }
-
-    const deltaTime = timestamp - timeRef.current;
-    const gameState = gameStateRef.current;
-    const player = gameState.player;
-
-    canvasContext?.clearRect(0, 0, canvas.width, canvas.height);
-    player.drawEntity(canvasContext);
-
-    if (keysPressed.current.ArrowDown) {
-      player.moveEntity(0, player.movementSpeed, deltaTime);
-    }
-    if (keysPressed.current.ArrowUp) {
-      player.moveEntity(0, -player.movementSpeed, deltaTime);
-    }
-    if (keysPressed.current.ArrowLeft) {
-      player.moveEntity(-player.movementSpeed, 0, deltaTime);
-    }
-    if (keysPressed.current.ArrowRight) {
-      player.moveEntity(player.movementSpeed, 0, deltaTime);
-    }
-
-    for (const enemy of enemiesRef.current) {
-      enemy.drawEntity(canvasContext);
-      const hasCollided = player.checkEnemyCollision(enemy);
-
-      if (hasCollided && gameState.player.damageCooldown <= 0) {
-        player.takeDamage(1);
-        gameState.emitEvent();
-      }
-    }
-
-    if (player.damageCooldown > 0) {
-      player.damageCooldown -= deltaTime;
-    }
-
-    timeRef.current = timestamp;
-    requestAnimationFrame(gameLoop);
+    gameLoopRef.current(0);
   }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      keysPressed.current[e.key as keyof AvailableKeys] = true;
-    };
-    const handleKeyUp = (e: KeyboardEvent) => {
-      keysPressed.current[e.key as keyof AvailableKeys] = false;
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
-
-  useEffect(() => {
-    gameLoop(timeRef.current);
-  }, [gameLoop]);
 
   return (
     <canvas

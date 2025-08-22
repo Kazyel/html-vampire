@@ -11,7 +11,6 @@ interface IGameEntity {
   drawEntity: (context: CanvasRenderingContext2D) => void;
   moveEntity: (x: number, y: number, deltaTime: number) => void;
   growEntity: (width: number, height: number) => void;
-  takeDamage: (damage: number) => void;
 }
 
 const DEFAULT_GAME_ENTITY_WIDTH = 25;
@@ -53,9 +52,5 @@ export default class GameEntityObject implements IGameEntity {
   growEntity(width: number, height: number): void {
     this.width += width;
     this.height += height;
-  }
-
-  takeDamage(damageTaken: number): void {
-    this.health -= damageTaken;
   }
 }

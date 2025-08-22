@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGameContext } from "../context/game-context";
+import { useGameContext } from "@/context/game-context";
 
 export const GameUI = () => {
   const gameContext = useGameContext();

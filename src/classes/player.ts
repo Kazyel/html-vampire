@@ -5,6 +5,8 @@ interface IPlayer {
   hitboxPadding: number;
 
   checkEnemyCollision: (enemy: GameEntityObject) => void;
+  updateDamageCooldown: (deltaTime: number) => void;
+  takeDamage: (damageTaken: number) => void;
 }
 
 const DEFAULT_PLAYER_HEALTH = 15;
@@ -27,6 +29,12 @@ export default class Player extends GameEntityObject implements IPlayer {
   takeDamage(damageTaken: number): void {
     this.health -= damageTaken;
     this.damageCooldown = PLAYER_INVULNERABILITY_TIME;
+  }
+
+  updateDamageCooldown(deltaTime: number) {
+    if (this.damageCooldown > 0) {
+      this.damageCooldown -= deltaTime;
+    }
   }
 
   checkEnemyCollision(enemy: GameEntityObject) {
