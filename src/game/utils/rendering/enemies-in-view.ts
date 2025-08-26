@@ -1,4 +1,4 @@
-import type Enemy from "@/classes/enemy";
+import type Enemy from "@/game/models/entities/enemy";
 
 function getEnemiesInView(
   enemies: Enemy[],

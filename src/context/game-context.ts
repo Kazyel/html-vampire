@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
-import GlobalGameState from "@/classes/game-state";
+import GameManager from "@/game/core/game-manager";
 
-const GameContext = createContext<GlobalGameState | undefined>(undefined);
+const GameContext = createContext<GameManager | undefined>(undefined);
 
 export const useGameContext = () => {
   const context = useContext(GameContext);

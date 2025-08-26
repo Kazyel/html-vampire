@@ -1,11 +1,9 @@
 import { useRef } from "react";
+import GameManager from "@/game/core/game-manager";
 import GameContext from "@/context/game-context";
-import GlobalGameState from "@/classes/game-state";
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
-  const gameState = useRef<GlobalGameState>(new GlobalGameState());
+  const game = useRef<GameManager>(new GameManager());
 
-  return (
-    <GameContext.Provider value={gameState.current}>{children}</GameContext.Provider>
-  );
+  return <GameContext.Provider value={game.current}>{children}</GameContext.Provider>;
 };

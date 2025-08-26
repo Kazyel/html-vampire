@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 import { useGameContext } from "@/context/game-context";
 
 export const GameUI = () => {
-  const gameContext = useGameContext();
+  const ctx = useGameContext();
 
-  const [playerHealth, setPlayerHealth] = useState(gameContext.player.health);
+  const [playerHealth, setPlayerHealth] = useState(ctx.state.player.health);
 
   useEffect(() => {
     const handleHealthUpdate = () => {
-      setPlayerHealth(gameContext.player.health);
+      setPlayerHealth(ctx.state.player.health);
     };
 
-    gameContext.subscribe("healthChange", handleHealthUpdate);
+    ctx.events.subscribe("healthChange", handleHealthUpdate);
     return () => {
-      gameContext.unsubscribe("healthChange", handleHealthUpdate);
+      ctx.events.unsubscribe("healthChange", handleHealthUpdate);
     };
-  }, [gameContext]);
+  }, [ctx]);
 
   return <div>Player Health: {playerHealth}</div>;
 };

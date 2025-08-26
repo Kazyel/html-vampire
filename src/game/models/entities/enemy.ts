@@ -1,12 +1,6 @@
 import GameEntityObject from "./game-entity-object";
 
-interface IEnemy {
-  damage: number;
-  shouldRemove: boolean;
-  takeDamage: (damageTaken: number) => void;
-}
-
-export default class Enemy extends GameEntityObject implements IEnemy {
+export default class Enemy extends GameEntityObject {
   damage: number;
   shouldRemove: boolean;
 

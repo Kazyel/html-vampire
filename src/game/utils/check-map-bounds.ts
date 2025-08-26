@@ -1,4 +1,4 @@
-import type Player from "@/classes/player";
+import type Player from "@/game/models/entities/player";
 
 import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
 

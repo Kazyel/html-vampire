@@ -1,24 +1,9 @@
-import type GlobalGameState from "./game-state";
-
 import GameEntityObject from "./game-entity-object";
-
-interface IProjectile {
-  damage: number;
-  duration: number;
-  speed: number;
-  velocityX: number;
-  velocityY: number;
-  shouldRemove: boolean;
-
-  moveProjectile: (ctx: GlobalGameState) => void;
-  checkEnemyCollision: (enemy: GameEntityObject) => void;
-  updateAndCheckExpiration: (tick: number) => void;
-}
 
 const DEFAULT_DURATION = 2000; // -> milliseconds
 const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
 
-export default class Projectile extends GameEntityObject implements IProjectile {
+export default class Projectile extends GameEntityObject {
   duration: number;
   damage: number;
   speed: number;
@@ -44,9 +29,9 @@ export default class Projectile extends GameEntityObject implements IProjectile 
     this.velocityY = 0;
   }
 
-  moveProjectile(ctx: GlobalGameState): void {
-    this.x += this.velocityX * (ctx.LOGIC_TICK / this.speed);
-    this.y += this.velocityY * (ctx.LOGIC_TICK / this.speed);
+  moveProjectile(tick: number): void {
+    this.x += this.velocityX * (tick / this.speed);
+    this.y += this.velocityY * (tick / this.speed);
   }
 
   checkEnemyCollision(enemy: GameEntityObject) {

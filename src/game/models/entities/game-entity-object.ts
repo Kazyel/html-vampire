@@ -1,22 +1,9 @@
-interface IGameEntity {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  color: string;
-  health: number;
-  movementSpeed: number;
-  drawEntity: (context: CanvasRenderingContext2D) => void;
-  moveEntity: (x: number, y: number, deltaTime: number) => void;
-  growEntity: (width: number, height: number) => void;
-}
-
 const DEFAULT_GAME_ENTITY_WIDTH = 25; // -> pixels
 const DEFAULT_GAME_ENTITY_HEIGHT = 25; // -> pixels
 const DEFAULT_GAME_ENTITY_SPEED = 50; // -> pixels
 const DEFAULT_GAME_ENTITY_HEALTH = 25;
 
-export default class GameEntityObject implements IGameEntity {
+export default class GameEntityObject {
   x: number;
   y: number;
   width: number;
