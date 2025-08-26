@@ -1,6 +1,6 @@
 import type { MovementKeys } from "@/types/events";
 
-export default class PlayerInputService {
+class PlayerInputService {
   public keysPressed: MovementKeys = {
     ArrowDown: false,
     ArrowLeft: false,
@@ -22,3 +22,5 @@ export default class PlayerInputService {
     });
   }
 }
+
+export default PlayerInputService;

@@ -3,7 +3,7 @@ const DEFAULT_GAME_ENTITY_HEIGHT = 25; // -> pixels
 const DEFAULT_GAME_ENTITY_SPEED = 50; // -> pixels
 const DEFAULT_GAME_ENTITY_HEALTH = 25;
 
-export default class GameEntityObject {
+class GameEntityObject {
   x: number;
   y: number;
   width: number;
@@ -38,3 +38,5 @@ export default class GameEntityObject {
     this.height += height;
   }
 }
+
+export default GameEntityObject;

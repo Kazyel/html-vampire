@@ -1,7 +1,7 @@
 import type Projectile from "../models/entities/projectile";
 import type GameManager from "../core/game-manager";
 
-export default class GameCollisionManager {
+class GameCollisionManager {
   checkEnemyHittingPlayer = (ctx: GameManager) => {
     const { player, enemies } = ctx.state;
 
@@ -38,3 +38,5 @@ export default class GameCollisionManager {
     }
   };
 }
+
+export default GameCollisionManager;

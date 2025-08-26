@@ -56,7 +56,7 @@ export default class Player extends GameEntityObject {
     enemies.forEach((enemy) => {
       const dx = enemy.x - this.x;
       const dy = enemy.y - this.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const distance = dx * dx + dy * dy;
 
       if (distance < minDistance) {
         minDistance = distance;

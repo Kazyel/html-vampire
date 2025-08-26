@@ -1,6 +1,6 @@
 import GameEntityObject from "./game-entity-object";
 
-export default class Enemy extends GameEntityObject {
+class Enemy extends GameEntityObject {
   damage: number;
   shouldRemove: boolean;
 
@@ -15,3 +15,5 @@ export default class Enemy extends GameEntityObject {
     this.health -= damageTaken;
   }
 }
+
+export default Enemy;

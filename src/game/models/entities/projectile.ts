@@ -3,7 +3,7 @@ import GameEntityObject from "./game-entity-object";
 const DEFAULT_DURATION = 2000; // -> milliseconds
 const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
 
-export default class Projectile extends GameEntityObject {
+class Projectile extends GameEntityObject {
   duration: number;
   damage: number;
   speed: number;
@@ -52,3 +52,5 @@ export default class Projectile extends GameEntityObject {
     }
   }
 }
+
+export default Projectile;

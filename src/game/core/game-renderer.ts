@@ -1,6 +1,6 @@
 import type GameDataState from "@/game/core/game-data-state";
 
-export default class GameRenderer {
+class GameRenderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D | null;
 
@@ -31,3 +31,5 @@ export default class GameRenderer {
     this.ctx.restore();
   }
 }
+
+export default GameRenderer;

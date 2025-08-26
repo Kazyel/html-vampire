@@ -4,7 +4,7 @@ import getEnemiesInView from "@/game/utils/rendering/enemies-in-view";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "@/constants/dimensions";
 
 class AttackManager {
-  orchestrateAttack = (ctx: GameManager) => {
+  orchestrateAttack(ctx: GameManager) {
     const { enemies, player, camera } = ctx.state;
 
     const visibleEnemies = getEnemiesInView(
@@ -18,12 +18,13 @@ class AttackManager {
     for (const weapon of player.weapons) {
       if (weapon.canAttack(ctx.LOGIC_TICK)) {
         const nearestEnemy = player.findNearestEnemy(visibleEnemies);
+
         if (nearestEnemy) {
           weapon.fireWeapon(ctx, nearestEnemy);
         }
       }
     }
-  };
+  }
 
   updateProjectiles(ctx: GameManager) {
     const { projectiles, collisions } = ctx.state;

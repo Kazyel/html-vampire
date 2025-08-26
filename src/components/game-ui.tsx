@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGameContext } from "@/context/game-context";
 
-export const GameUI = () => {
+const GameUI = () => {
   const ctx = useGameContext();
 
   const [playerHealth, setPlayerHealth] = useState(ctx.state.player.health);
@@ -17,5 +17,11 @@ export const GameUI = () => {
     };
   }, [ctx]);
 
-  return <div>Player Health: {playerHealth}</div>;
+  return (
+    <div>
+      <p className="text-white/75 font-bold">Player Health: {playerHealth}</p>
+    </div>
+  );
 };
+
+export default GameUI;

@@ -5,7 +5,7 @@ import Projectile from "../entities/projectile";
 
 const DEFAULT_ATTACK_SPEED = 1000; // -> milliseconds
 
-export default class Weapon {
+class Weapon {
   name: string;
   damage: number;
   attackSpeed: number;
@@ -34,7 +34,9 @@ export default class Weapon {
       const dx = nearestEnemy.x - player.x;
       const dy = nearestEnemy.y - player.y;
 
-      const length = Math.sqrt(dx * dx + dy * dy);
+      const length = Math.hypot(dx, dy);
+      if (length < 1e-8) return;
+
       const directionX = dx / length;
       const directionY = dy / length;
 
@@ -47,3 +49,5 @@ export default class Weapon {
     }
   }
 }
+
+export default Weapon;

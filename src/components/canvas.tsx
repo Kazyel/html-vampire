@@ -33,7 +33,7 @@ const Canvas = () => {
 
   return (
     <canvas
-      className="border-2 rounded-md mt-10"
+      className="border-2 rounded-md mt-10 border-white/25"
       width={1600}
       height={900}
       ref={canvasRef}

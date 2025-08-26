@@ -1,6 +1,6 @@
 import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
 
-export default class Camera {
+class Camera {
   x: number;
   y: number;
 
@@ -17,3 +17,5 @@ export default class Camera {
     this.y = Math.max(0, Math.min(targetY, MAP_HEIGHT - canvasHeight));
   }
 }
+
+export default Camera;
