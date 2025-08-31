@@ -5,7 +5,7 @@ import Weapon from "../items/weapon";
 
 const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
-const PLAYER_INVULNERABILITY_TIME = 500; // -> milliseconds
+const PLAYER_INVULNERABILITY_TIME = 150; // -> milliseconds
 
 export default class Player extends GameEntityObject {
   weapons: Array<Weapon>;
@@ -32,6 +32,11 @@ export default class Player extends GameEntityObject {
     if (this.damageCooldown > 0) {
       this.damageCooldown -= tick;
     }
+  }
+
+  walk(x: number, y: number, tick: number): void {
+    this.x += x * (tick / 1000);
+    this.y += y * (tick / 1000);
   }
 
   checkEnemyCollision(enemy: GameEntityObject) {

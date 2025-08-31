@@ -16,7 +16,8 @@ const Canvas = () => {
 
     const gameLoop = (timestamp: number) => {
       gameManager.updateTime(timestamp);
-      gameManager.updateGameLogic();
+
+      gameManager.play();
       gameRenderer.render(gameManager.state);
 
       animationFrameId.current = requestAnimationFrame(gameLoop);

@@ -1,11 +1,14 @@
 import type Projectile from "../models/entities/projectile";
 import type GameManager from "../core/game-manager";
+import type Enemy from "../models/entities/enemy";
+
+import { buildSpatialGrid, getCellId } from "../utils/spatial-hashing";
 
 class GameCollisionManager {
-  checkEnemyHittingPlayer = (ctx: GameManager) => {
+  checkEnemyHittingPlayer(ctx: GameManager): void {
     const { player, enemies } = ctx.state;
 
-    for (const enemy of enemies) {
+    for (const enemy of enemies.spawned) {
       const hasCollided = player.checkEnemyCollision(enemy);
 
       if (hasCollided && player.damageCooldown <= 0) {
@@ -15,16 +18,16 @@ class GameCollisionManager {
     }
 
     player.updateDamageCooldown(ctx.LOGIC_TICK);
-  };
+  }
 
-  checkProjectileHit = (ctx: GameManager, proj: Projectile) => {
+  checkProjectileHit(ctx: GameManager, proj: Projectile): void {
     const { enemies } = ctx.state;
 
     if (proj.shouldRemove) {
       return;
     }
 
-    for (const enemy of enemies) {
+    for (const enemy of enemies.spawned) {
       if (enemy.shouldRemove) {
         continue;
       }
@@ -36,7 +39,56 @@ class GameCollisionManager {
         return;
       }
     }
-  };
+  }
+
+  checkEnemyCollisions(ctx: GameManager): void {
+    const COLLISION_PADDING = 2;
+
+    const { spawned } = ctx.state.enemies;
+    const spatialGrid = buildSpatialGrid(spawned);
+
+    for (const enemy of spawned) {
+      const cellId = getCellId(enemy.x, enemy.y);
+
+      const [cellX, cellY] = cellId.split("-").map(Number);
+      const potentialColliders: Array<Enemy> = [];
+
+      for (let y = cellY - 1; y <= cellY + 1; y++) {
+        for (let x = cellX - 1; x <= cellX + 1; x++) {
+          const neighborId = `${x}-${y}`;
+
+          if (spatialGrid.has(neighborId)) {
+            potentialColliders.push(...spatialGrid.get(neighborId)!);
+          }
+        }
+      }
+
+      for (const otherEnemy of potentialColliders) {
+        if (enemy !== otherEnemy) {
+          const dx = otherEnemy.x - enemy.x;
+          const dy = otherEnemy.y - enemy.y;
+          const distance = Math.hypot(dx, dy);
+
+          const combinedHalfWidths = enemy.width / 2 + otherEnemy.width / 2;
+          const separationDistance = combinedHalfWidths + COLLISION_PADDING;
+
+          if (distance < separationDistance) {
+            const overlap = separationDistance - distance;
+            const directionX = distance ? dx / distance : 0;
+            const directionY = distance ? dy / distance : 0;
+
+            const displacementX = (directionX * overlap) / 2;
+            const displacementY = (directionY * overlap) / 2;
+
+            enemy.x -= displacementX;
+            enemy.y -= displacementY;
+            otherEnemy.x += displacementX;
+            otherEnemy.y += displacementY;
+          }
+        }
+      }
+    }
+  }
 }
 
 export default GameCollisionManager;

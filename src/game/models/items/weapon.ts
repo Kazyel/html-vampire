@@ -3,7 +3,7 @@ import type GameManager from "../../core/game-manager";
 
 import Projectile from "../entities/projectile";
 
-const DEFAULT_ATTACK_SPEED = 1000; // -> milliseconds
+const DEFAULT_ATTACK_SPEED = 600; // -> milliseconds
 
 class Weapon {
   name: string;

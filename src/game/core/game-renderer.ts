@@ -21,9 +21,11 @@ class GameRenderer {
     this.ctx.translate(-camera.x, -camera.y);
 
     player.drawEntity(this.ctx);
-    for (const enemy of enemies) {
+
+    for (const enemy of enemies.spawned) {
       enemy.drawEntity(this.ctx);
     }
+
     for (const projectile of projectiles) {
       projectile.drawEntity(this.ctx);
     }

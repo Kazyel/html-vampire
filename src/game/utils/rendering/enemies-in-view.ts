@@ -1,13 +1,13 @@
-import type Enemy from "@/game/models/entities/enemy";
+import type GameEnemyManager from "@/game/services/game-enemy-manager";
 
 function getEnemiesInView(
-  enemies: Enemy[],
+  enemies: GameEnemyManager,
   cameraX: number,
   cameraY: number,
   canvasWidth: number,
   canvasHeight: number
 ) {
-  return enemies.filter(
+  return enemies.spawned.filter(
     (enemy) =>
       enemy.x + enemy.width > cameraX &&
       enemy.x < cameraX + canvasWidth &&
