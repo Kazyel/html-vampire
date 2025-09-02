@@ -5,10 +5,10 @@ import type Enemy from "../models/entities/enemy";
 import { buildSpatialGrid, getCellId } from "../utils/spatial-hashing";
 
 class GameCollisionManager {
-  checkEnemyHittingPlayer(ctx: GameManager): void {
+  public checkEnemyHittingPlayer(ctx: GameManager): void {
     const { player, enemies } = ctx.state;
 
-    for (const enemy of enemies.spawned) {
+    for (const enemy of enemies) {
       const hasCollided = player.checkEnemyCollision(enemy);
 
       if (hasCollided && player.damageCooldown <= 0) {
@@ -16,18 +16,16 @@ class GameCollisionManager {
         ctx.events.emitEvent();
       }
     }
-
-    player.updateDamageCooldown(ctx.LOGIC_TICK);
   }
 
-  checkProjectileHit(ctx: GameManager, proj: Projectile): void {
-    const { enemies } = ctx.state;
-
+  public checkProjectileHit(ctx: GameManager, proj: Projectile): void {
     if (proj.shouldRemove) {
       return;
     }
 
-    for (const enemy of enemies.spawned) {
+    const { enemies } = ctx.state;
+
+    for (const enemy of enemies) {
       if (enemy.shouldRemove) {
         continue;
       }
@@ -41,13 +39,13 @@ class GameCollisionManager {
     }
   }
 
-  checkEnemyCollisions(ctx: GameManager): void {
+  public checkEnemyCollisions(ctx: GameManager): void {
     const COLLISION_PADDING = 2;
 
-    const { spawned } = ctx.state.enemies;
-    const spatialGrid = buildSpatialGrid(spawned);
+    const { enemies } = ctx.state;
+    const spatialGrid = buildSpatialGrid(enemies);
 
-    for (const enemy of spawned) {
+    for (const enemy of enemies) {
       const cellId = getCellId(enemy.x, enemy.y);
 
       const [cellX, cellY] = cellId.split("-").map(Number);

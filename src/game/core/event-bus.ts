@@ -1,26 +1,26 @@
 import type { GameUIEvent } from "@/types/events";
 
 class EventBus {
-  listeners: Array<GameUIEvent>;
+  public listeners: Array<GameUIEvent>;
 
   constructor() {
     this.listeners = [];
   }
 
-  emitEvent(): void {
+  public emitEvent(): void {
     for (const event of this.listeners) {
       event.callback();
     }
   }
 
-  subscribe(event: string, callback: () => void): void {
+  public subscribe(event: string, callback: () => void): void {
     this.listeners.push({
       event,
       callback,
     });
   }
 
-  unsubscribe(event: string, callback: () => void): void {
+  public unsubscribe(event: string, callback: () => void): void {
     const eventIndex = this.listeners.findIndex(
       (item) => item.callback === callback && item.event === event
     );

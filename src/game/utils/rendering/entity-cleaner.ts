@@ -1,11 +1,10 @@
 import type GameManager from "@/game/core/game-manager";
 
-const entityCleaner = (ctx: GameManager) => {
-  ctx.state.projectiles = ctx.state.projectiles.filter((proj) => !proj.shouldRemove);
+const initEntityCleaner = (ctx: GameManager) => {
+  const { projectiles, enemies } = ctx.state;
 
-  ctx.state.enemies.spawned = ctx.state.enemies.spawned.filter(
-    (enemy) => !enemy.shouldRemove
-  );
+  ctx.state.projectiles = projectiles.filter((proj) => !proj.shouldRemove);
+  ctx.state.enemies = enemies.filter((enemy) => !enemy.shouldRemove);
 };
 
-export default entityCleaner;
+export default initEntityCleaner;

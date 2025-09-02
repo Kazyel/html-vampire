@@ -2,27 +2,21 @@ import type GameCollisionManager from "@/game/services/game-collision-manager";
 import type Player from "@/game/models/entities/player";
 import type Projectile from "@/game/models/entities/projectile";
 import type Camera from "./camera";
-import type GameEnemyManager from "../services/game-enemy-manager";
+import type Enemy from "../models/entities/enemy";
 
 class GameDataState {
-  camera: Camera;
-  collisions: GameCollisionManager;
-  player: Player;
-  enemies: GameEnemyManager;
-  projectiles: Projectile[];
+  public camera: Camera;
+  public collisions: GameCollisionManager;
+  public player: Player;
+  public enemies: Array<Enemy>;
+  public projectiles: Projectile[];
 
-  constructor(
-    camera: Camera,
-    collisions: GameCollisionManager,
-    player: Player,
-    enemies: GameEnemyManager,
-    projectiles: Projectile[]
-  ) {
+  constructor(camera: Camera, collisions: GameCollisionManager, player: Player) {
     this.camera = camera;
     this.collisions = collisions;
     this.player = player;
-    this.enemies = enemies;
-    this.projectiles = projectiles;
+    this.enemies = [];
+    this.projectiles = [];
   }
 }
 

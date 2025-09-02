@@ -1,4 +1,4 @@
-import type GameDataState from "@/game/core/game-data-state";
+import type GameManager from "./game-manager";
 
 class GameRenderer {
   private canvas: HTMLCanvasElement;
@@ -9,12 +9,12 @@ class GameRenderer {
     this.ctx = canvas.getContext("2d");
   }
 
-  render(state: GameDataState) {
+  public render(game: GameManager) {
     if (!this.ctx) {
       return;
     }
 
-    const { player, camera, enemies, projectiles } = state;
+    const { player, camera, enemies, projectiles } = game.state;
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
@@ -22,7 +22,7 @@ class GameRenderer {
 
     player.drawEntity(this.ctx);
 
-    for (const enemy of enemies.spawned) {
+    for (const enemy of enemies) {
       enemy.drawEntity(this.ctx);
     }
 
