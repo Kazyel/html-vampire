@@ -11,7 +11,6 @@ class Weapon {
   public name: string;
   public damage: number;
   public attackSpeed: number;
-
   public kills: number;
 
   constructor(name: string, damage: number) {

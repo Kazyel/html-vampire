@@ -7,6 +7,7 @@ class EventBus {
     this.listeners = [];
   }
 
+
   public emitEvent(event: string): void {
     const targetEvent = this.listeners.findIndex((item) => item.event === event);
 

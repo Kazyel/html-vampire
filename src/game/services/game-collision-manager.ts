@@ -20,6 +20,7 @@ class GameCollisionManager {
 
   public checkProjectileHittingEnemy(ctx: GameManager, projectile: Projectile): void {
     if (projectile.shouldRemove) {
+
       return;
     }
 

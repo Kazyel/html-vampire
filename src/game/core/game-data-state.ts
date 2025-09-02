@@ -5,6 +5,7 @@ import Camera from "./camera";
 import type Enemy from "../models/entities/enemy";
 import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
 
+
 class GameDataState {
   public camera: Camera;
   public collisions: GameCollisionManager;
@@ -16,6 +17,7 @@ class GameDataState {
     this.camera = new Camera(0, 0);
     this.collisions = new GameCollisionManager();
     this.player = new Player(MAP_WIDTH / 2, MAP_HEIGHT / 2, "red");
+
 
     this.enemies = [];
     this.projectiles = [];

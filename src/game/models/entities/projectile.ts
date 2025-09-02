@@ -1,5 +1,6 @@
 import type GameManager from "@/game/core/game-manager";
 import type Weapon from "../items/weapon";
+
 import GameEntityObject from "./game-entity-object";
 
 const DEFAULT_DURATION = 2000; // -> milliseconds

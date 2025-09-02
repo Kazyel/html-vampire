@@ -10,6 +10,7 @@ import GameEnemyManager from "../services/enemy/game-enemy-manager";
 class GameManager {
   private enemies: GameEnemyManager;
   private inputService: PlayerInputService;
+
   private isPaused: boolean;
   private lastTimestamp: number;
   private deltaTime: number;
@@ -30,6 +31,7 @@ class GameManager {
     collisions.checkEnemyCollisions(this);
     collisions.checkEnemyHittingPlayer(this);
 
+
     initEntityCleaner(this);
   }
 
@@ -47,7 +49,6 @@ class GameManager {
   constructor() {
     this.enemies = new GameEnemyManager();
     this.inputService = new PlayerInputService();
-
     this.isPaused = false;
     this.deltaTime = 0;
     this.logicTimer = 0;
