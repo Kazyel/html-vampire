@@ -13,13 +13,13 @@ class GameCollisionManager {
 
       if (hasCollided && player.damageCooldown <= 0) {
         player.takeDamage(enemy.damage);
-        ctx.events.emitEvent();
+        ctx.events.emitEvent("healthUpdate");
       }
     }
   }
 
-  public checkProjectileHit(ctx: GameManager, proj: Projectile): void {
-    if (proj.shouldRemove) {
+  public checkProjectileHittingEnemy(ctx: GameManager, projectile: Projectile): void {
+    if (projectile.shouldRemove) {
       return;
     }
 
@@ -30,10 +30,17 @@ class GameCollisionManager {
         continue;
       }
 
-      const hasCollided = proj.checkEnemyCollision(enemy);
+      const hasCollided = projectile.checkEnemyCollision(enemy);
+
       if (hasCollided) {
-        proj.shouldRemove = true;
+        projectile.shouldRemove = true;
         enemy.shouldRemove = true;
+
+        if (projectile.sourceWeapon) {
+          projectile.sourceWeapon.kills++;
+          ctx.events.emitEvent("killUpdate");
+        }
+
         return;
       }
     }

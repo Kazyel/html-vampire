@@ -1,8 +1,9 @@
-import type GameCollisionManager from "@/game/services/game-collision-manager";
-import type Player from "@/game/models/entities/player";
+import GameCollisionManager from "@/game/services/game-collision-manager";
+import Player from "@/game/models/entities/player";
 import type Projectile from "@/game/models/entities/projectile";
-import type Camera from "./camera";
+import Camera from "./camera";
 import type Enemy from "../models/entities/enemy";
+import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
 
 class GameDataState {
   public camera: Camera;
@@ -11,10 +12,11 @@ class GameDataState {
   public enemies: Array<Enemy>;
   public projectiles: Projectile[];
 
-  constructor(camera: Camera, collisions: GameCollisionManager, player: Player) {
-    this.camera = camera;
-    this.collisions = collisions;
-    this.player = player;
+  constructor() {
+    this.camera = new Camera(0, 0);
+    this.collisions = new GameCollisionManager();
+    this.player = new Player(MAP_WIDTH / 2, MAP_HEIGHT / 2, "red");
+
     this.enemies = [];
     this.projectiles = [];
   }

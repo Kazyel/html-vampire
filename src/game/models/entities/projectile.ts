@@ -1,4 +1,5 @@
 import type GameManager from "@/game/core/game-manager";
+import type Weapon from "../items/weapon";
 import GameEntityObject from "./game-entity-object";
 
 const DEFAULT_DURATION = 2000; // -> milliseconds
@@ -11,6 +12,7 @@ class Projectile extends GameEntityObject {
   public velocityX: number;
   public velocityY: number;
   public shouldRemove: boolean;
+  public sourceWeapon: Weapon;
 
   private moveProjectile(tick: number): void {
     this.x += this.velocityX * (tick / this.speed);
@@ -29,6 +31,7 @@ class Projectile extends GameEntityObject {
     y: number,
     color: string,
     damage: number,
+    sourceWeapon: Weapon,
     duration: number = DEFAULT_DURATION
   ) {
     super(x, y, color);
@@ -36,10 +39,11 @@ class Projectile extends GameEntityObject {
     this.duration = duration;
     this.damage = damage;
     this.speed = DEFAULT_PROJECTILE_SPEED;
-
-    this.shouldRemove = false;
     this.velocityX = 0;
     this.velocityY = 0;
+
+    this.sourceWeapon = sourceWeapon;
+    this.shouldRemove = false;
   }
 
   public checkEnemyCollision(enemy: GameEntityObject) {

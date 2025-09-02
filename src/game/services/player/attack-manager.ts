@@ -30,6 +30,6 @@ export const updateProjectiles = (ctx: GameManager) => {
 
   for (const projectile of projectiles) {
     projectile.update(ctx);
-    collisions.checkProjectileHit(ctx, projectile);
+    collisions.checkProjectileHittingEnemy(ctx, projectile);
   }
 };
