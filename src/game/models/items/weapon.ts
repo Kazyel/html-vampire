@@ -11,12 +11,14 @@ class Weapon {
   public name: string;
   public damage: number;
   public attackSpeed: number;
+  public kills: number;
 
   constructor(name: string, damage: number) {
     this.name = name;
     this.damage = damage;
     this.attackSpeed = DEFAULT_ATTACK_SPEED;
     this.attackTimer = 0;
+    this.kills = 0;
   }
 
   public canAttack(tick: number): boolean {
@@ -41,7 +43,7 @@ class Weapon {
       const directionX = dx / length;
       const directionY = dy / length;
 
-      const newProjectile = new Projectile(player.x, player.y, "pink", this.damage);
+      const newProjectile = new Projectile(player.x, player.y, "pink", this.damage, this);
 
       newProjectile.velocityX = directionX * 300;
       newProjectile.velocityY = directionY * 300;

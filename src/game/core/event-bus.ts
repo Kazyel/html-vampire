@@ -7,10 +7,15 @@ class EventBus {
     this.listeners = [];
   }
 
-  public emitEvent(): void {
-    for (const event of this.listeners) {
-      event.callback();
+
+  public emitEvent(event: string): void {
+    const targetEvent = this.listeners.findIndex((item) => item.event === event);
+
+    if (targetEvent === -1) {
+      return;
     }
+
+    this.listeners[targetEvent].callback();
   }
 
   public subscribe(event: string, callback: () => void): void {
