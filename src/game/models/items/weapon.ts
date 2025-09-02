@@ -6,10 +6,11 @@ import Projectile from "../entities/projectile";
 const DEFAULT_ATTACK_SPEED = 600; // -> milliseconds
 
 class Weapon {
-  name: string;
-  damage: number;
-  attackSpeed: number;
-  attackTimer: number;
+  private attackTimer: number;
+
+  public name: string;
+  public damage: number;
+  public attackSpeed: number;
 
   constructor(name: string, damage: number) {
     this.name = name;
@@ -18,7 +19,7 @@ class Weapon {
     this.attackTimer = 0;
   }
 
-  canAttack(tick: number): boolean {
+  public canAttack(tick: number): boolean {
     this.attackTimer += tick;
     if (this.attackTimer >= this.attackSpeed) {
       this.attackTimer -= this.attackSpeed;
@@ -27,7 +28,7 @@ class Weapon {
     return false;
   }
 
-  fireWeapon(ctx: GameManager, nearestEnemy: Enemy) {
+  public fireWeapon(ctx: GameManager, nearestEnemy: Enemy) {
     const { player, projectiles } = ctx.state;
 
     if (nearestEnemy) {

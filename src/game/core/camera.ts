@@ -1,15 +1,20 @@
 import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
 
 class Camera {
-  x: number;
-  y: number;
+  public x: number;
+  public y: number;
 
   constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
 
-  update(playerX: number, playerY: number, canvasWidth: number, canvasHeight: number) {
+  public update(
+    playerX: number,
+    playerY: number,
+    canvasWidth: number,
+    canvasHeight: number
+  ) {
     const targetX = playerX - canvasWidth / 2;
     const targetY = playerY - canvasHeight / 2;
 

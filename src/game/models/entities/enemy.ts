@@ -1,9 +1,10 @@
 import type GameManager from "@/game/core/game-manager";
+
 import GameEntityObject from "./game-entity-object";
 
 class Enemy extends GameEntityObject {
-  damage: number;
-  shouldRemove: boolean;
+  public damage: number;
+  public shouldRemove: boolean;
 
   constructor(x: number, y: number, color: string) {
     super(x, y, color);
@@ -12,11 +13,11 @@ class Enemy extends GameEntityObject {
     this.shouldRemove = false;
   }
 
-  takeDamage(damageTaken: number): void {
+  public takeDamage(damageTaken: number): void {
     this.health -= damageTaken;
   }
 
-  attackPlayer(ctx: GameManager) {
+  public attackPlayer(ctx: GameManager) {
     const { player } = ctx.state;
 
     const dx = player.x - this.x;

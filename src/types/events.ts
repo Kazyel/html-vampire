@@ -9,3 +9,7 @@ export type MovementKeys = {
   ArrowLeft: boolean;
   ArrowRight: boolean;
 };
+
+export type BasicKeys = {
+  Escape: boolean;
+};

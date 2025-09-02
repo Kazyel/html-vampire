@@ -5,20 +5,19 @@ import GameRenderer from "@/game/core/game-renderer";
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
-  const gameManager = useGameContext();
+  const game = useGameContext();
 
   useEffect(() => {
-    if (!canvasRef.current || !gameManager) {
+    if (!canvasRef.current || !game) {
       return;
     }
 
-    const gameRenderer = new GameRenderer(canvasRef.current);
+    const renderer = new GameRenderer(canvasRef.current);
 
     const gameLoop = (timestamp: number) => {
-      gameManager.updateTime(timestamp);
-
-      gameManager.play();
-      gameRenderer.render(gameManager.state);
+      game.updateTime(timestamp);
+      game.run();
+      renderer.render(game);
 
       animationFrameId.current = requestAnimationFrame(gameLoop);
     };
@@ -30,7 +29,7 @@ const Canvas = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [gameManager]);
+  }, [game]);
 
   return (
     <canvas
