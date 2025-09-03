@@ -3,9 +3,6 @@ import type Weapon from "../items/weapon";
 
 import GameEntityObject from "./game-entity-object";
 
-const DEFAULT_DURATION = 2000; // -> milliseconds
-const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
-
 class Projectile extends GameEntityObject {
   public duration: number;
   public damage: number;
@@ -27,27 +24,19 @@ class Projectile extends GameEntityObject {
     }
   }
 
-  constructor(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    damage: number,
-    sourceWeapon: Weapon,
-    duration: number = DEFAULT_DURATION
-  ) {
+  constructor(x: number, y: number, width: number, height: number, sourceWeapon: Weapon) {
     super(x, y);
 
-    this.duration = duration;
-    this.damage = damage;
-    this.speed = DEFAULT_PROJECTILE_SPEED;
+    this.sourceWeapon = sourceWeapon;
+    this.duration = sourceWeapon.projectileDuration;
+    this.speed = sourceWeapon.projectileSpeed;
+    this.damage = sourceWeapon.damage;
 
     this.width = width;
     this.height = height;
     this.velocityX = 0;
     this.velocityY = 0;
 
-    this.sourceWeapon = sourceWeapon;
     this.shouldRemove = false;
   }
 

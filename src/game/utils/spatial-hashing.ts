@@ -1,4 +1,4 @@
-import type Enemy from "../models/entities/enemy";
+import type { PossibleEntities } from "../services/game-collision-manager";
 
 const CELL_SIZE = 100;
 
@@ -8,8 +8,8 @@ export const getCellId = (x: number, y: number) => {
   return `${cellX}-${cellY}`;
 };
 
-export const buildSpatialGrid = (enemies: Array<Enemy>) => {
-  const spatialGrid = new Map<string, Array<Enemy>>();
+export const buildSpatialGrid = <T extends PossibleEntities>(enemies: Array<T>) => {
+  const spatialGrid = new Map<string, Array<T>>();
 
   for (const enemy of enemies) {
     const cellId = getCellId(enemy.x, enemy.y);

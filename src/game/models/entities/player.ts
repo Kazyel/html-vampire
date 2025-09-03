@@ -13,11 +13,14 @@ import checkMapBounds from "@/game/utils/check-map-bounds";
 const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
 const PLAYER_INVULNERABILITY_TIME = 300; // -> milliseconds
+const PLAYER_MAX_LEVEL = 100;
 
 export default class Player extends GameEntityObject {
   public weapons: Array<Weapon>;
   public damageCooldown: number;
   public hitboxPadding: number;
+  public level: number;
+  public experiencePoints: number;
 
   private updateDamageCooldown(tick: number) {
     if (this.damageCooldown > 0) {
@@ -48,7 +51,9 @@ export default class Player extends GameEntityObject {
 
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
-    this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png", 0)];
+    this.level = 1;
+    this.experiencePoints = 0;
+    this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png")];
 
     this.hitboxPadding = 3;
     this.damageCooldown = 0;
@@ -59,6 +64,11 @@ export default class Player extends GameEntityObject {
       this.health -= damageTaken;
       this.damageCooldown = PLAYER_INVULNERABILITY_TIME;
     }
+  }
+
+  public levelUp(): void {
+    if (this.level >= PLAYER_MAX_LEVEL) return;
+    this.level += 1;
   }
 
   public checkEnemyCollision(enemy: GameEntityObject) {

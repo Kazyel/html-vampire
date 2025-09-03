@@ -10,12 +10,16 @@ class GameRenderer {
   private tempCtx: CanvasRenderingContext2D | null;
 
   private drawGame(gameCtx: GameManager, canvasCtx: CanvasRenderingContext2D): void {
-    const { player, enemies, projectiles } = gameCtx.state;
+    const { player, enemies, projectiles, experiencePoints } = gameCtx.state;
 
     player.drawEntity(canvasCtx);
 
     for (const enemy of enemies) {
       enemy.drawEntity(canvasCtx);
+    }
+
+    for (const experiencePoint of experiencePoints) {
+      experiencePoint.drawEntity(canvasCtx);
     }
 
     for (const projectile of projectiles) {
