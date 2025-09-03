@@ -1,4 +1,4 @@
-import type { BasicKeys, MovementKeys } from "@/types/events";
+import type { BasicKeys, MovementKeys } from "@/types/keyboard";
 
 class PlayerInputService {
   public movementKeys: MovementKeys = {
