@@ -31,6 +31,7 @@ class GameManager {
     collisions.checkProjectileAndEnemyCollisions(this);
     collisions.checkEnemyCollisions(this);
     collisions.checkEnemyHittingPlayer(this);
+    collisions.checkPlayerGetsExperience(this);
 
     initEntityCleaner(this);
   }

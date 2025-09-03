@@ -1,18 +1,22 @@
 import type GameManager from "../core/game-manager";
 import type Enemy from "../models/entities/enemy";
+import ExperiencePoint from "../models/entities/experience-point";
 
 import { buildSpatialGrid, getCellId } from "../utils/spatial-hashing";
 
+export type PossibleEntities = Enemy | ExperiencePoint;
+export type SpatialGrid<T extends PossibleEntities> = Map<string, Array<T>>;
+
 class GameCollisionManager {
-  private getPotentialColliders(
+  private getPotentialColliders<T extends PossibleEntities>(
     x: number,
     y: number,
-    spatialGrid: Map<string, Array<Enemy>>
-  ): Array<Enemy> {
+    spatialGrid: SpatialGrid<T>
+  ): Array<T> {
     const cellId = getCellId(x, y);
 
     const [cellX, cellY] = cellId.split("-").map(Number);
-    const potentialColliders: Array<Enemy> = [];
+    const potentialColliders: Array<T> = [];
 
     for (let y = cellY - 1; y <= cellY + 1; y++) {
       for (let x = cellX - 1; x <= cellX + 1; x++) {
@@ -39,6 +43,26 @@ class GameCollisionManager {
     }
   }
 
+  public checkPlayerGetsExperience(ctx: GameManager): void {
+    const { player, experiencePoints } = ctx.state;
+
+    const spatialGrid = buildSpatialGrid(experiencePoints);
+    const potentialExperiencePoints = this.getPotentialColliders<ExperiencePoint>(
+      player.x,
+      player.y,
+      spatialGrid
+    );
+
+    for (const experiencePoint of potentialExperiencePoints) {
+      if (experiencePoint.checkPlayerCollision(player)) {
+        experiencePoint.shouldRemove = true;
+        player.experiencePoints += 1;
+        ctx.events.emitEvent("experienceUpdate");
+        return;
+      }
+    }
+  }
+
   public checkProjectileAndEnemyCollisions(ctx: GameManager): void {
     const { projectiles, enemies } = ctx.state;
 
@@ -49,7 +73,7 @@ class GameCollisionManager {
         continue;
       }
 
-      const potentialEnemies = this.getPotentialColliders(
+      const potentialEnemies = this.getPotentialColliders<Enemy>(
         projectile.x,
         projectile.y,
         spatialGrid
@@ -62,7 +86,7 @@ class GameCollisionManager {
 
         if (projectile.checkEnemyCollision(enemy)) {
           projectile.shouldRemove = true;
-          enemy.shouldRemove = true;
+          enemy.onDeath(ctx);
 
           if (projectile.sourceWeapon) {
             projectile.sourceWeapon.kills++;

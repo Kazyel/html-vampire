@@ -1,6 +1,7 @@
 import type GameManager from "@/game/core/game-manager";
 
 import GameEntityObject from "./game-entity-object";
+import ExperiencePoint from "./experience-point";
 
 class Enemy extends GameEntityObject {
   public damage: number;
@@ -31,6 +32,11 @@ class Enemy extends GameEntityObject {
 
     this.x += directionX * this.movementSpeed * (ctx.LOGIC_TICK / 1000);
     this.y += directionY * this.movementSpeed * (ctx.LOGIC_TICK / 1000);
+  }
+
+  public onDeath(ctx: GameManager) {
+    this.shouldRemove = true;
+    ctx.state.experiencePoints.push(new ExperiencePoint(this.x, this.y));
   }
 }
 

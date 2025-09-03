@@ -13,10 +13,10 @@ class GameEntityObject {
   public health: number;
   public movementSpeed: number;
 
-  constructor(x: number, y: number, color?: string) {
+  constructor(x: number, y: number, color: string = DEFAULT_GAME_ENTITY_COLOR) {
     this.x = x;
     this.y = y;
-    this.color = color ?? DEFAULT_GAME_ENTITY_COLOR;
+    this.color = color;
 
     this.width = DEFAULT_GAME_ENTITY_WIDTH;
     this.height = DEFAULT_GAME_ENTITY_HEIGHT;

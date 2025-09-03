@@ -4,6 +4,8 @@ import type GameManager from "../../core/game-manager";
 import Projectile from "../entities/projectile";
 
 const DEFAULT_ATTACK_SPEED = 600; // -> milliseconds
+const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
+const DEFAULT_PROJECTILE_DURATION = 2000; // -> milliseconds
 
 class Weapon {
   private attackTimer: number;
@@ -11,6 +13,8 @@ class Weapon {
 
   public name: string;
   public damage: number;
+  public projectileSpeed: number;
+  public projectileDuration: number;
   public attackSpeed: number;
   public kills: number;
 
@@ -19,9 +23,18 @@ class Weapon {
     this.sprite.src = asset;
   }
 
-  constructor(name: string, damage: number, asset: string, attackOffset: number) {
+  constructor(
+    name: string,
+    damage: number,
+    asset: string,
+    attackOffset: number = 0,
+    projectileSpeed: number = DEFAULT_PROJECTILE_SPEED,
+    projectileDuration: number = DEFAULT_PROJECTILE_DURATION
+  ) {
     this.name = name;
     this.damage = damage;
+    this.projectileSpeed = projectileSpeed;
+    this.projectileDuration = projectileDuration;
     this.kills = 0;
 
     this.attackSpeed = DEFAULT_ATTACK_SPEED;
@@ -61,7 +74,6 @@ class Weapon {
         player.y,
         projectileWidth,
         projectileHeight,
-        this.damage,
         this
       );
 
