@@ -6,9 +6,8 @@ const GameUI = () => {
 
   const [playerHealth, setPlayerHealth] = useState(ctx.state.player.health);
   const [playerKills, setPlayerKills] = useState(0);
-  const [playerExperience, setPlayerExperience] = useState(
-    ctx.state.player.experiencePoints
-  );
+  const [playerExperience, setPlayerExperience] = useState(ctx.state.player.currentExp);
+  const [playerLevel, setPlayerLevel] = useState(ctx.state.player.level);
 
   useEffect(() => {
     const handleHealthUpdate = () => {
@@ -16,7 +15,7 @@ const GameUI = () => {
     };
 
     const handleExperienceUpdate = () => {
-      setPlayerExperience(ctx.state.player.experiencePoints);
+      setPlayerExperience(ctx.state.player.currentExp);
     };
 
     const handleKillsUpdate = () => {
@@ -30,14 +29,20 @@ const GameUI = () => {
       setPlayerKills(killCounter);
     };
 
+    const handleLevelUpdate = () => {
+      setPlayerLevel(ctx.state.player.level);
+    };
+
     ctx.events.subscribe("healthUpdate", handleHealthUpdate);
     ctx.events.subscribe("killUpdate", handleKillsUpdate);
     ctx.events.subscribe("experienceUpdate", handleExperienceUpdate);
+    ctx.events.subscribe("levelUp", handleLevelUpdate);
 
     return () => {
       ctx.events.unsubscribe("healthUpdate", handleHealthUpdate);
       ctx.events.unsubscribe("experienceUpdate", handleExperienceUpdate);
       ctx.events.unsubscribe("killUpdate", handleKillsUpdate);
+      ctx.events.unsubscribe("levelUp", handleLevelUpdate);
     };
   }, [ctx]);
 
@@ -46,6 +51,7 @@ const GameUI = () => {
       <p className="text-white/75 font-bold">Health: {playerHealth}</p>
       <p className="text-white/75 font-bold">Kills: {playerKills}</p>
       <p className="text-white/75 font-bold">Experience: {playerExperience}</p>
+      <p className="text-white/75 font-bold">Level: {playerLevel}</p>
     </div>
   );
 };

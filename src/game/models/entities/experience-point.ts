@@ -7,21 +7,24 @@ const DEFAULT_EXP_HEIGHT = 10;
 
 class ExperiencePoint extends GameEntityObject {
   public shouldRemove: boolean;
+  public value: number;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, value: number = 50) {
     super(x + DEFAULT_EXP_WIDTH / 2, y + DEFAULT_EXP_HEIGHT / 2, "#77ee50");
-
     this.width = DEFAULT_EXP_WIDTH;
     this.height = DEFAULT_EXP_HEIGHT;
 
+    this.value = value;
     this.shouldRemove = false;
   }
 
-  public checkPlayerCollision(player: Player): boolean {
-    const leftSize = this.x < player.x + player.experienceRange + player.width;
-    const rightSize = this.x + this.width > player.x - player.experienceRange;
-    const topSize = this.y < player.y + player.height + player.experienceRange;
-    const bottomSize = this.y + this.height > player.y - player.experienceRange;
+  public checkPlayerRange(player: Player): boolean {
+    const { x, y, width, height, expPickupRange } = player;
+
+    const leftSize = this.x < x + expPickupRange + width;
+    const rightSize = this.x + this.width > x - expPickupRange;
+    const topSize = this.y < y + height + expPickupRange;
+    const bottomSize = this.y + this.height > y;
 
     const isTouchingX = leftSize && rightSize;
     const isTouchingY = topSize && bottomSize;

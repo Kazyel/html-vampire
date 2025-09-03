@@ -1,6 +1,7 @@
 import type GameManager from "../core/game-manager";
 import type Enemy from "../models/entities/enemy";
 import type ExperiencePoint from "../models/entities/experience-point";
+import collectExperience from "../utils/collect-experience";
 
 import { buildSpatialGrid, getPotentialColliders } from "../utils/spatial-hashing";
 
@@ -17,6 +18,7 @@ class GameCollisionManager {
 
     for (const enemy of potentialEnemies) {
       const hasCollided = player.checkEnemyCollision(enemy);
+
       if (hasCollided && player.damageCooldown <= 0) {
         player.takeDamage(enemy.damage);
         ctx.events.emitEvent("healthUpdate");
@@ -35,10 +37,10 @@ class GameCollisionManager {
     );
 
     for (const experiencePoint of potentialExperiencePoints) {
-      if (experiencePoint.checkPlayerCollision(player)) {
-        experiencePoint.shouldRemove = true;
-        player.experiencePoints += 1;
-        ctx.events.emitEvent("experienceUpdate");
+      const hasCollided = experiencePoint.checkPlayerRange(player);
+
+      if (hasCollided) {
+        collectExperience(ctx, experiencePoint);
         return;
       }
     }
