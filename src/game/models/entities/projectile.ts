@@ -41,10 +41,12 @@ class Projectile extends GameEntityObject {
   }
 
   public checkEnemyCollision(enemy: GameEntityObject) {
-    const leftSize = this.x < enemy.x + enemy.width;
-    const rightSize = this.x + this.width > enemy.x;
-    const topSize = this.y < enemy.y + enemy.height;
-    const bottomSize = this.y + this.height > enemy.y;
+    const { x, y, width, height } = enemy;
+
+    const leftSize = this.x < x + width;
+    const rightSize = this.x + this.width > x;
+    const topSize = this.y < y + height;
+    const bottomSize = this.y + this.height > y;
 
     const isTouchingX = leftSize && rightSize;
     const isTouchingY = topSize && bottomSize;

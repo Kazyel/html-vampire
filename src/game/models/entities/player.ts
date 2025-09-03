@@ -14,14 +14,19 @@ const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
 const PLAYER_INVULNERABILITY_TIME = 300; // -> milliseconds
 const PLAYER_MAX_LEVEL = 100;
+const PLAYER_BASE_XP = 50;
 
 export default class Player extends GameEntityObject {
   public weapons: Array<Weapon>;
-  public damageCooldown: number;
-  public hitboxPadding: number;
+
   public level: number;
-  public experiencePoints: number;
-  public experienceRange: number;
+  public totalExp: number;
+  public currentExp: number;
+  public expToLevelUp: number;
+  public expPickupRange: number;
+
+  public damageCooldown: number;
+  private hitboxPadding: number;
 
   private updateDamageCooldown(tick: number) {
     if (this.damageCooldown > 0) {
@@ -47,6 +52,22 @@ export default class Player extends GameEntityObject {
     if (keys.ArrowRight) this.walk(this.movementSpeed, 0, tick);
   }
 
+  private calculateExpToLevelUp() {
+    const TRANSITION_LEVEL = 50;
+
+    if (this.level <= TRANSITION_LEVEL) {
+      const EARLY_RATE = 1.4;
+      return Math.floor(PLAYER_BASE_XP * Math.pow(EARLY_RATE, this.level - 1));
+    }
+
+    const xpAtTransitionLevel = 50 * Math.pow(1.4, TRANSITION_LEVEL - 1);
+    const LATE_RATE = 2;
+
+    return Math.floor(
+      xpAtTransitionLevel * Math.pow(LATE_RATE, this.level - TRANSITION_LEVEL)
+    );
+  }
+
   constructor(x: number, y: number, color: string) {
     super(x, y, color);
 
@@ -55,8 +76,10 @@ export default class Player extends GameEntityObject {
     this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png")];
 
     this.level = 1;
-    this.experiencePoints = 0;
-    this.experienceRange = 150;
+    this.totalExp = 0;
+    this.currentExp = 0;
+    this.expPickupRange = 150;
+    this.expToLevelUp = PLAYER_BASE_XP;
 
     this.hitboxPadding = 3;
     this.damageCooldown = 0;
@@ -69,16 +92,28 @@ export default class Player extends GameEntityObject {
     }
   }
 
-  public levelUp(): void {
+  public canLevelUp(ctx: GameManager): void {
     if (this.level >= PLAYER_MAX_LEVEL) return;
-    this.level += 1;
+    if (this.currentExp < this.expToLevelUp) return;
+
+    this.level++;
+
+    this.currentExp -= this.expToLevelUp;
+    this.expToLevelUp = this.calculateExpToLevelUp();
+
+    ctx.events.emitEvent("levelUp");
+    ctx.events.emitEvent("experienceUpdate");
+    // remove
+    console.log(this.expToLevelUp);
   }
 
   public checkEnemyCollision(enemy: GameEntityObject) {
-    const leftSide = this.x + this.hitboxPadding < enemy.x + enemy.width;
-    const rightSide = this.x + this.width - this.hitboxPadding > enemy.x;
-    const topSide = this.y + this.hitboxPadding < enemy.y + enemy.height;
-    const bottomSide = this.y + this.height - this.hitboxPadding > enemy.y;
+    const { x, y, width, height } = enemy;
+
+    const leftSide = this.x + this.hitboxPadding < x + width;
+    const rightSide = this.x + this.width - this.hitboxPadding > x;
+    const topSide = this.y + this.hitboxPadding < y + height;
+    const bottomSide = this.y + this.height - this.hitboxPadding > y;
 
     return leftSide && rightSide && topSide && bottomSide;
   }
