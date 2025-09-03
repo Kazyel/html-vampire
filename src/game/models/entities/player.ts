@@ -48,7 +48,7 @@ export default class Player extends GameEntityObject {
 
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
-    this.weapons = [new Weapon("AK-47", 5), new Weapon("AK-48", 5)];
+    this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png", 0)];
 
     this.hitboxPadding = 3;
     this.damageCooldown = 0;

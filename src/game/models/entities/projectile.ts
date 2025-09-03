@@ -30,16 +30,20 @@ class Projectile extends GameEntityObject {
   constructor(
     x: number,
     y: number,
-    color: string,
+    width: number,
+    height: number,
     damage: number,
     sourceWeapon: Weapon,
     duration: number = DEFAULT_DURATION
   ) {
-    super(x, y, color);
+    super(x, y);
 
     this.duration = duration;
     this.damage = damage;
     this.speed = DEFAULT_PROJECTILE_SPEED;
+
+    this.width = width;
+    this.height = height;
     this.velocityX = 0;
     this.velocityY = 0;
 
@@ -56,6 +60,19 @@ class Projectile extends GameEntityObject {
     const isTouchingX = leftSize && rightSize;
     const isTouchingY = topSize && bottomSize;
     return isTouchingX && isTouchingY;
+  }
+
+  public draw(canvasCtx: CanvasRenderingContext2D): void {
+    const sprite = this.sourceWeapon.getSprite();
+    if (!sprite) return;
+
+    const rotationAngle = Math.atan2(this.velocityY, this.velocityX) - 1.5 * Math.PI;
+
+    canvasCtx.save();
+    canvasCtx.translate(this.x, this.y);
+    canvasCtx.rotate(rotationAngle);
+    canvasCtx.drawImage(sprite, -this.width / 2, -this.height / 2);
+    canvasCtx.restore();
   }
 
   public update(ctx: GameManager): void {
