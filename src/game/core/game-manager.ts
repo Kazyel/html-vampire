@@ -4,14 +4,13 @@ import PlayerInputService from "../services/player/player-input";
 
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "@/constants/dimensions";
 
-import initEntityCleaner from "../utils/rendering/entity-cleaner";
+import initEntityCleaner from "../utils/entity-cleaner";
 import GameEnemyManager from "../services/enemy/game-enemy-manager";
 
 class GameManager {
   private enemies: GameEnemyManager;
   private inputService: PlayerInputService;
 
-  private isPaused: boolean;
   private lastTimestamp: number;
   private deltaTime: number;
   private logicTimer: number;
@@ -19,6 +18,7 @@ class GameManager {
   public LOGIC_TICK = 1000 / 60;
   public events: EventBus;
   public state: GameDataState;
+  public isPaused: boolean;
 
   private update() {
     const { player, camera, collisions } = this.state;
@@ -28,9 +28,9 @@ class GameManager {
     camera.update(player.x, player.y, CANVAS_WIDTH, CANVAS_HEIGHT);
     this.enemies.update(this);
 
+    collisions.checkProjectileAndEnemyCollisions(this);
     collisions.checkEnemyCollisions(this);
     collisions.checkEnemyHittingPlayer(this);
-
 
     initEntityCleaner(this);
   }

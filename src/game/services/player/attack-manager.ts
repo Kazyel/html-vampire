@@ -1,6 +1,6 @@
 import type GameManager from "@/game/core/game-manager";
 
-import getEnemiesInView from "@/game/utils/rendering/enemies-in-view";
+import getEnemiesInView from "@/game/utils/enemies-in-view";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "@/constants/dimensions";
 
 export const orchestrateAttack = (ctx: GameManager) => {
@@ -26,10 +26,9 @@ export const orchestrateAttack = (ctx: GameManager) => {
 };
 
 export const updateProjectiles = (ctx: GameManager) => {
-  const { projectiles, collisions } = ctx.state;
+  const { projectiles } = ctx.state;
 
   for (const projectile of projectiles) {
     projectile.update(ctx);
-    collisions.checkProjectileHittingEnemy(ctx, projectile);
   }
 };

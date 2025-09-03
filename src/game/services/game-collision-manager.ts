@@ -1,16 +1,37 @@
-import type Projectile from "../models/entities/projectile";
 import type GameManager from "../core/game-manager";
 import type Enemy from "../models/entities/enemy";
 
 import { buildSpatialGrid, getCellId } from "../utils/spatial-hashing";
 
 class GameCollisionManager {
+  private getPotentialColliders(
+    x: number,
+    y: number,
+    spatialGrid: Map<string, Array<Enemy>>
+  ): Array<Enemy> {
+    const cellId = getCellId(x, y);
+
+    const [cellX, cellY] = cellId.split("-").map(Number);
+    const potentialColliders: Array<Enemy> = [];
+
+    for (let y = cellY - 1; y <= cellY + 1; y++) {
+      for (let x = cellX - 1; x <= cellX + 1; x++) {
+        const neighborId = `${x}-${y}`;
+
+        if (spatialGrid.has(neighborId)) {
+          potentialColliders.push(...spatialGrid.get(neighborId)!);
+        }
+      }
+    }
+
+    return potentialColliders;
+  }
+
   public checkEnemyHittingPlayer(ctx: GameManager): void {
     const { player, enemies } = ctx.state;
 
     for (const enemy of enemies) {
       const hasCollided = player.checkEnemyCollision(enemy);
-
       if (hasCollided && player.damageCooldown <= 0) {
         player.takeDamage(enemy.damage);
         ctx.events.emitEvent("healthUpdate");
@@ -18,31 +39,37 @@ class GameCollisionManager {
     }
   }
 
-  public checkProjectileHittingEnemy(ctx: GameManager, projectile: Projectile): void {
-    if (projectile.shouldRemove) {
+  public checkProjectileAndEnemyCollisions(ctx: GameManager): void {
+    const { projectiles, enemies } = ctx.state;
 
-      return;
-    }
+    const spatialGrid = buildSpatialGrid(enemies);
 
-    const { enemies } = ctx.state;
-
-    for (const enemy of enemies) {
-      if (enemy.shouldRemove) {
+    for (const projectile of projectiles) {
+      if (projectile.shouldRemove) {
         continue;
       }
 
-      const hasCollided = projectile.checkEnemyCollision(enemy);
+      const potentialEnemies = this.getPotentialColliders(
+        projectile.x,
+        projectile.y,
+        spatialGrid
+      );
 
-      if (hasCollided) {
-        projectile.shouldRemove = true;
-        enemy.shouldRemove = true;
-
-        if (projectile.sourceWeapon) {
-          projectile.sourceWeapon.kills++;
-          ctx.events.emitEvent("killUpdate");
+      for (const enemy of potentialEnemies) {
+        if (enemy.shouldRemove) {
+          continue;
         }
 
-        return;
+        if (projectile.checkEnemyCollision(enemy)) {
+          projectile.shouldRemove = true;
+          enemy.shouldRemove = true;
+
+          if (projectile.sourceWeapon) {
+            projectile.sourceWeapon.kills++;
+            ctx.events.emitEvent("killUpdate");
+          }
+          return;
+        }
       }
     }
   }
@@ -54,20 +81,11 @@ class GameCollisionManager {
     const spatialGrid = buildSpatialGrid(enemies);
 
     for (const enemy of enemies) {
-      const cellId = getCellId(enemy.x, enemy.y);
-
-      const [cellX, cellY] = cellId.split("-").map(Number);
-      const potentialColliders: Array<Enemy> = [];
-
-      for (let y = cellY - 1; y <= cellY + 1; y++) {
-        for (let x = cellX - 1; x <= cellX + 1; x++) {
-          const neighborId = `${x}-${y}`;
-
-          if (spatialGrid.has(neighborId)) {
-            potentialColliders.push(...spatialGrid.get(neighborId)!);
-          }
-        }
-      }
+      const potentialColliders = this.getPotentialColliders(
+        enemy.x,
+        enemy.y,
+        spatialGrid
+      );
 
       for (const otherEnemy of potentialColliders) {
         if (enemy !== otherEnemy) {

@@ -1,7 +1,8 @@
 const DEFAULT_GAME_ENTITY_WIDTH = 25; // -> pixels
 const DEFAULT_GAME_ENTITY_HEIGHT = 25; // -> pixels
-const DEFAULT_GAME_ENTITY_SPEED = 100; // -> pixels
+const DEFAULT_GAME_ENTITY_SPEED = 150; // -> pixels
 const DEFAULT_GAME_ENTITY_HEALTH = 25;
+const DEFAULT_GAME_ENTITY_COLOR = "pink";
 
 class GameEntityObject {
   public x: number;
@@ -12,10 +13,10 @@ class GameEntityObject {
   public health: number;
   public movementSpeed: number;
 
-  constructor(x: number, y: number, color: string) {
+  constructor(x: number, y: number, color?: string) {
     this.x = x;
     this.y = y;
-    this.color = color;
+    this.color = color ?? DEFAULT_GAME_ENTITY_COLOR;
 
     this.width = DEFAULT_GAME_ENTITY_WIDTH;
     this.height = DEFAULT_GAME_ENTITY_HEIGHT;
