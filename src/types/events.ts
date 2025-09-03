@@ -1,15 +1,6 @@
+export type AvailableEvents = "healthUpdate" | "killUpdate" | "experienceUpdate";
+
 export type GameUIEvent = {
-  event: string;
+  event: AvailableEvents;
   callback: () => void;
-};
-
-export type MovementKeys = {
-  ArrowUp: boolean;
-  ArrowDown: boolean;
-  ArrowLeft: boolean;
-  ArrowRight: boolean;
-};
-
-export type BasicKeys = {
-  Escape: boolean;
 };

@@ -1,6 +1,6 @@
 import type Enemy from "./enemy";
 import type GameManager from "@/game/core/game-manager";
-import type { MovementKeys } from "@/types/events";
+import type { MovementKeys } from "@/types/keyboard";
 
 import GameEntityObject from "./game-entity-object";
 import {
@@ -21,6 +21,7 @@ export default class Player extends GameEntityObject {
   public hitboxPadding: number;
   public level: number;
   public experiencePoints: number;
+  public experienceRange: number;
 
   private updateDamageCooldown(tick: number) {
     if (this.damageCooldown > 0) {
@@ -51,9 +52,11 @@ export default class Player extends GameEntityObject {
 
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
+    this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png")];
+
     this.level = 1;
     this.experiencePoints = 0;
-    this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png")];
+    this.experienceRange = 150;
 
     this.hitboxPadding = 3;
     this.damageCooldown = 0;

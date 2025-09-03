@@ -34,7 +34,7 @@ class Enemy extends GameEntityObject {
     this.y += directionY * this.movementSpeed * (ctx.LOGIC_TICK / 1000);
   }
 
-  public onDeath(ctx: GameManager) {
+  public onDeathUpdate(ctx: GameManager) {
     this.shouldRemove = true;
     ctx.state.experiencePoints.push(new ExperiencePoint(this.x, this.y));
   }

@@ -1,40 +1,21 @@
 import type GameManager from "../core/game-manager";
 import type Enemy from "../models/entities/enemy";
-import ExperiencePoint from "../models/entities/experience-point";
+import type ExperiencePoint from "../models/entities/experience-point";
 
-import { buildSpatialGrid, getCellId } from "../utils/spatial-hashing";
-
-export type PossibleEntities = Enemy | ExperiencePoint;
-export type SpatialGrid<T extends PossibleEntities> = Map<string, Array<T>>;
+import { buildSpatialGrid, getPotentialColliders } from "../utils/spatial-hashing";
 
 class GameCollisionManager {
-  private getPotentialColliders<T extends PossibleEntities>(
-    x: number,
-    y: number,
-    spatialGrid: SpatialGrid<T>
-  ): Array<T> {
-    const cellId = getCellId(x, y);
-
-    const [cellX, cellY] = cellId.split("-").map(Number);
-    const potentialColliders: Array<T> = [];
-
-    for (let y = cellY - 1; y <= cellY + 1; y++) {
-      for (let x = cellX - 1; x <= cellX + 1; x++) {
-        const neighborId = `${x}-${y}`;
-
-        if (spatialGrid.has(neighborId)) {
-          potentialColliders.push(...spatialGrid.get(neighborId)!);
-        }
-      }
-    }
-
-    return potentialColliders;
-  }
-
   public checkEnemyHittingPlayer(ctx: GameManager): void {
     const { player, enemies } = ctx.state;
 
-    for (const enemy of enemies) {
+    const spatialGrid = buildSpatialGrid(enemies);
+    const potentialEnemies = getPotentialColliders<Enemy>(
+      player.x,
+      player.y,
+      spatialGrid
+    );
+
+    for (const enemy of potentialEnemies) {
       const hasCollided = player.checkEnemyCollision(enemy);
       if (hasCollided && player.damageCooldown <= 0) {
         player.takeDamage(enemy.damage);
@@ -47,7 +28,7 @@ class GameCollisionManager {
     const { player, experiencePoints } = ctx.state;
 
     const spatialGrid = buildSpatialGrid(experiencePoints);
-    const potentialExperiencePoints = this.getPotentialColliders<ExperiencePoint>(
+    const potentialExperiencePoints = getPotentialColliders<ExperiencePoint>(
       player.x,
       player.y,
       spatialGrid
@@ -73,7 +54,7 @@ class GameCollisionManager {
         continue;
       }
 
-      const potentialEnemies = this.getPotentialColliders<Enemy>(
+      const potentialEnemies = getPotentialColliders<Enemy>(
         projectile.x,
         projectile.y,
         spatialGrid
@@ -86,7 +67,7 @@ class GameCollisionManager {
 
         if (projectile.checkEnemyCollision(enemy)) {
           projectile.shouldRemove = true;
-          enemy.onDeath(ctx);
+          enemy.onDeathUpdate(ctx);
 
           if (projectile.sourceWeapon) {
             projectile.sourceWeapon.kills++;
@@ -105,11 +86,7 @@ class GameCollisionManager {
     const spatialGrid = buildSpatialGrid(enemies);
 
     for (const enemy of enemies) {
-      const potentialColliders = this.getPotentialColliders(
-        enemy.x,
-        enemy.y,
-        spatialGrid
-      );
+      const potentialColliders = getPotentialColliders(enemy.x, enemy.y, spatialGrid);
 
       for (const otherEnemy of potentialColliders) {
         if (enemy !== otherEnemy) {

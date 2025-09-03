@@ -18,10 +18,10 @@ class ExperiencePoint extends GameEntityObject {
   }
 
   public checkPlayerCollision(player: Player): boolean {
-    const leftSize = this.x < player.x + player.width;
-    const rightSize = this.x + this.width > player.x;
-    const topSize = this.y < player.y + player.height;
-    const bottomSize = this.y + this.height > player.y;
+    const leftSize = this.x < player.x + player.experienceRange + player.width;
+    const rightSize = this.x + this.width > player.x - player.experienceRange;
+    const topSize = this.y < player.y + player.height + player.experienceRange;
+    const bottomSize = this.y + this.height > player.y - player.experienceRange;
 
     const isTouchingX = leftSize && rightSize;
     const isTouchingY = topSize && bottomSize;

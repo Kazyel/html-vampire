@@ -1,4 +1,4 @@
-import type { GameUIEvent } from "@/types/events";
+import type { AvailableEvents, GameUIEvent } from "@/types/events";
 
 class EventBus {
   public listeners: Array<GameUIEvent>;
@@ -7,8 +7,7 @@ class EventBus {
     this.listeners = [];
   }
 
-
-  public emitEvent(event: string): void {
+  public emitEvent(event: AvailableEvents): void {
     const targetEvent = this.listeners.findIndex((item) => item.event === event);
 
     if (targetEvent === -1) {
@@ -18,14 +17,14 @@ class EventBus {
     this.listeners[targetEvent].callback();
   }
 
-  public subscribe(event: string, callback: () => void): void {
+  public subscribe(event: AvailableEvents, callback: () => void): void {
     this.listeners.push({
       event,
       callback,
     });
   }
 
-  public unsubscribe(event: string, callback: () => void): void {
+  public unsubscribe(event: AvailableEvents, callback: () => void): void {
     const eventIndex = this.listeners.findIndex(
       (item) => item.callback === callback && item.event === event
     );
