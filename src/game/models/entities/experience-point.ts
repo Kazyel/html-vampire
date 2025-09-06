@@ -1,6 +1,6 @@
-import type Player from "./player";
+import type Player from './player';
 
-import GameEntityObject from "./game-entity-object";
+import GameEntityObject from './game-entity-object';
 
 const DEFAULT_EXP_WIDTH = 10;
 const DEFAULT_EXP_HEIGHT = 10;
@@ -10,7 +10,7 @@ class ExperiencePoint extends GameEntityObject {
   public value: number;
 
   constructor(x: number, y: number, value: number = 50) {
-    super(x + DEFAULT_EXP_WIDTH / 2, y + DEFAULT_EXP_HEIGHT / 2, "#77ee50");
+    super(x + DEFAULT_EXP_WIDTH / 2, y + DEFAULT_EXP_HEIGHT / 2, '#77ee50');
     this.width = DEFAULT_EXP_WIDTH;
     this.height = DEFAULT_EXP_HEIGHT;
 

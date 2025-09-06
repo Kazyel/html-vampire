@@ -1,6 +1,6 @@
-import type Player from "@/game/models/entities/player";
+import type Player from '@/game/models/entities/player';
 
-import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
+import { MAP_HEIGHT, MAP_WIDTH } from '@/constants/dimensions';
 
 const checkMapBounds = (player: Player) => {
   if (player.x < 0) {

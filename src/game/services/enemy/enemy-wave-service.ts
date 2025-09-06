@@ -1,7 +1,7 @@
-import type GameManager from "../../core/game-manager";
+import type GameManager from '../../core/game-manager';
 
-import { checkOutsideCamera } from "../../utils/spawn-conditions";
-import Enemy from "../../models/entities/enemy";
+import { checkOutsideCamera } from '../../utils/spawn-conditions';
+import Enemy from '../../models/entities/enemy';
 
 const MAX_ENTITY_SPAWN = 25;
 const ENEMIES_PER_WAVE = 5;
@@ -33,7 +33,7 @@ class EnemyWaveService {
 
       const { camera } = ctx.state;
       const [spawnX, spawnY] = checkOutsideCamera(camera);
-      const newEnemy = new Enemy(spawnX, spawnY, "blue");
+      const newEnemy = new Enemy(spawnX, spawnY, 'blue');
       enemies.push(newEnemy);
     }
   }

@@ -2,7 +2,7 @@ const DEFAULT_GAME_ENTITY_WIDTH = 25; // -> pixels
 const DEFAULT_GAME_ENTITY_HEIGHT = 25; // -> pixels
 const DEFAULT_GAME_ENTITY_SPEED = 150; // -> pixels
 const DEFAULT_GAME_ENTITY_HEALTH = 25;
-const DEFAULT_GAME_ENTITY_COLOR = "pink";
+const DEFAULT_GAME_ENTITY_COLOR = 'pink';
 
 class GameEntityObject {
   public x: number;

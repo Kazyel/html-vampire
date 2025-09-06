@@ -1,7 +1,7 @@
-import type GameManager from "@/game/core/game-manager";
+import type GameManager from '@/game/core/game-manager';
 
-import GameEntityObject from "./game-entity-object";
-import ExperiencePoint from "./experience-point";
+import GameEntityObject from './game-entity-object';
+import ExperiencePoint from './experience-point';
 
 class Enemy extends GameEntityObject {
   public damage: number;

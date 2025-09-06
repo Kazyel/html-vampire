@@ -1,9 +1,12 @@
-import type GameManager from "../core/game-manager";
-import type Enemy from "../models/entities/enemy";
-import type ExperiencePoint from "../models/entities/experience-point";
-import collectExperience from "../utils/collect-experience";
+import type GameManager from '../core/game-manager';
+import type Enemy from '../models/entities/enemy';
+import type ExperiencePoint from '../models/entities/experience-point';
+import collectExperience from '../utils/collect-experience';
 
-import { buildSpatialGrid, getPotentialColliders } from "../utils/spatial-hashing";
+import {
+  buildSpatialGrid,
+  getPotentialColliders,
+} from '../utils/spatial-hashing';
 
 class GameCollisionManager {
   public checkEnemyHittingPlayer(ctx: GameManager): void {
@@ -13,7 +16,7 @@ class GameCollisionManager {
     const potentialEnemies = getPotentialColliders<Enemy>(
       player.x,
       player.y,
-      spatialGrid
+      spatialGrid,
     );
 
     for (const enemy of potentialEnemies) {
@@ -21,7 +24,7 @@ class GameCollisionManager {
 
       if (hasCollided && player.damageCooldown <= 0) {
         player.takeDamage(enemy.damage);
-        ctx.events.emitEvent("healthUpdate");
+        ctx.events.emitEvent('healthUpdate');
       }
     }
   }
@@ -33,7 +36,7 @@ class GameCollisionManager {
     const potentialExperiencePoints = getPotentialColliders<ExperiencePoint>(
       player.x,
       player.y,
-      spatialGrid
+      spatialGrid,
     );
 
     for (const experiencePoint of potentialExperiencePoints) {
@@ -59,7 +62,7 @@ class GameCollisionManager {
       const potentialEnemies = getPotentialColliders<Enemy>(
         projectile.x,
         projectile.y,
-        spatialGrid
+        spatialGrid,
       );
 
       for (const enemy of potentialEnemies) {
@@ -69,11 +72,12 @@ class GameCollisionManager {
 
         if (projectile.checkEnemyCollision(enemy)) {
           projectile.shouldRemove = true;
-          enemy.onDeathUpdate(ctx);
+          enemy.takeDamage(projectile.damage);
 
-          if (projectile.sourceWeapon) {
+          if (projectile.sourceWeapon && enemy.health <= 0) {
             projectile.sourceWeapon.kills++;
-            ctx.events.emitEvent("killUpdate");
+            enemy.onDeathUpdate(ctx);
+            ctx.events.emitEvent('killUpdate');
           }
           return;
         }
@@ -88,7 +92,11 @@ class GameCollisionManager {
     const spatialGrid = buildSpatialGrid(enemies);
 
     for (const enemy of enemies) {
-      const potentialColliders = getPotentialColliders(enemy.x, enemy.y, spatialGrid);
+      const potentialColliders = getPotentialColliders(
+        enemy.x,
+        enemy.y,
+        spatialGrid,
+      );
 
       for (const otherEnemy of potentialColliders) {
         if (enemy !== otherEnemy) {

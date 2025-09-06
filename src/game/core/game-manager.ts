@@ -1,26 +1,27 @@
-import EventBus from "./event-bus";
-import GameDataState from "./game-data-state";
-import PlayerInputService from "../services/player/player-input";
+import type GameRenderer from './game-renderer';
 
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from "@/constants/dimensions";
+import EventBus from './event-bus';
+import GameDataState from './game-data-state';
+import PlayerInputService from '../services/player/player-input';
+import GameEnemyManager from '../services/enemy/game-enemy-manager';
 
-import initEntityCleaner from "../utils/entity-cleaner";
-import GameEnemyManager from "../services/enemy/game-enemy-manager";
+import initEntityCleaner from '../utils/entity-cleaner';
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
+import { ScreenState } from '@/types/state';
 
 class GameManager {
   private enemies: GameEnemyManager;
   private inputService: PlayerInputService;
-
   private lastTimestamp: number;
   private deltaTime: number;
   private logicTimer: number;
+  private isPaused: boolean;
 
   public LOGIC_TICK = 1000 / 60;
   public events: EventBus;
   public state: GameDataState;
-  public isPaused: boolean;
 
-  private update() {
+  private updateGame() {
     const { player, camera, collisions } = this.state;
     const { movementKeys } = this.inputService;
 
@@ -40,7 +41,7 @@ class GameManager {
     this.logicTimer += this.deltaTime;
 
     while (this.logicTimer >= this.LOGIC_TICK) {
-      this.update();
+      this.updateGame();
       this.logicTimer -= this.LOGIC_TICK;
     }
 
@@ -50,6 +51,7 @@ class GameManager {
   constructor() {
     this.enemies = new GameEnemyManager();
     this.inputService = new PlayerInputService();
+
     this.isPaused = false;
     this.deltaTime = 0;
     this.logicTimer = 0;
@@ -64,9 +66,30 @@ class GameManager {
     this.lastTimestamp = currentTimestamp;
   }
 
-  public run() {
-    if (this.inputService.keyJustPressed("Escape")) {
-      this.isPaused = !this.isPaused;
+  public pause(renderer: GameRenderer, screen: ScreenState) {
+    this.isPaused = true;
+    renderer.setScreen(screen);
+  }
+
+  public resume(renderer: GameRenderer) {
+    this.isPaused = false;
+    renderer.setScreen('GAMEPLAY');
+  }
+
+  public run(renderer: GameRenderer) {
+    if (this.inputService.keyJustPressed('Escape')) {
+      switch (renderer.currentScreen) {
+        case 'POWERUP':
+          this.resume(renderer);
+          break;
+        case 'PAUSE':
+          this.resume(renderer);
+          break;
+        case 'GAMEPLAY':
+        default:
+          this.pause(renderer, ScreenState.PAUSE);
+          break;
+      }
     }
 
     if (this.isPaused) {

@@ -1,4 +1,4 @@
-import { MAP_HEIGHT, MAP_WIDTH } from "@/constants/dimensions";
+import { MAP_HEIGHT, MAP_WIDTH } from '@/constants/dimensions';
 
 class Camera {
   public x: number;
@@ -13,7 +13,7 @@ class Camera {
     playerX: number,
     playerY: number,
     canvasWidth: number,
-    canvasHeight: number
+    canvasHeight: number,
   ) {
     const targetX = playerX - canvasWidth / 2;
     const targetY = playerY - canvasHeight / 2;

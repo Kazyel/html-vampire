@@ -1,14 +1,14 @@
-import type Enemy from "./enemy";
-import type GameManager from "@/game/core/game-manager";
-import type { MovementKeys } from "@/types/keyboard";
+import type Enemy from './enemy';
+import type GameManager from '@/game/core/game-manager';
+import type { MovementKeys } from '@/types/keyboard';
 
-import GameEntityObject from "./game-entity-object";
+import GameEntityObject from './game-entity-object';
 import {
   orchestrateAttack,
   updateProjectiles,
-} from "@/game/services/player/attack-manager";
-import Weapon from "../items/weapon";
-import checkMapBounds from "@/game/utils/check-map-bounds";
+} from '@/game/services/player/attack-manager';
+import Weapon from '../items/weapon';
+import checkMapBounds from '@/game/utils/check-map-bounds';
 
 const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
@@ -64,7 +64,7 @@ export default class Player extends GameEntityObject {
     const LATE_RATE = 2;
 
     return Math.floor(
-      xpAtTransitionLevel * Math.pow(LATE_RATE, this.level - TRANSITION_LEVEL)
+      xpAtTransitionLevel * Math.pow(LATE_RATE, this.level - TRANSITION_LEVEL),
     );
   }
 
@@ -73,7 +73,7 @@ export default class Player extends GameEntityObject {
 
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
-    this.weapons = [new Weapon("AK-47", 5, "/assets/weapons/bullet.png")];
+    this.weapons = [new Weapon('AK-47', 20, '/assets/weapons/bullet.png')];
 
     this.level = 1;
     this.totalExp = 0;
@@ -101,10 +101,8 @@ export default class Player extends GameEntityObject {
     this.currentExp -= this.expToLevelUp;
     this.expToLevelUp = this.calculateExpToLevelUp();
 
-    ctx.events.emitEvent("levelUp");
-    ctx.events.emitEvent("experienceUpdate");
-    // remove
-    console.log(this.expToLevelUp);
+    ctx.events.emitEvent('levelUp');
+    ctx.events.emitEvent('experienceUpdate');
   }
 
   public checkEnemyCollision(enemy: GameEntityObject) {

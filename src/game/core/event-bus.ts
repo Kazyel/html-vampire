@@ -1,39 +1,34 @@
-import type { AvailableEvents, GameUIEvent } from "@/types/events";
+import type { AvailableEvents } from '@/types/events';
 
 class EventBus {
-  public listeners: Array<GameUIEvent>;
+  private listeners: Map<AvailableEvents, Array<() => void>> = new Map();
 
-  constructor() {
-    this.listeners = [];
+  public on(event: AvailableEvents, callback: () => void): void {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event)!.push(callback);
+  }
+
+  public off(event: AvailableEvents, callback: () => void): void {
+    if (this.listeners.has(event)) {
+      const callbacks = this.listeners.get(event)!;
+
+      const index = callbacks.indexOf(callback);
+
+      if (index !== -1) {
+        callbacks.splice(index, 1);
+      }
+    }
   }
 
   public emitEvent(event: AvailableEvents): void {
-    const targetEvent = this.listeners.findIndex((item) => item.event === event);
-
-    if (targetEvent === -1) {
-      return;
+    if (this.listeners.has(event)) {
+      const callbacks = this.listeners.get(event)!;
+      for (const callback of callbacks) {
+        callback();
+      }
     }
-
-    this.listeners[targetEvent].callback();
-  }
-
-  public subscribe(event: AvailableEvents, callback: () => void): void {
-    this.listeners.push({
-      event,
-      callback,
-    });
-  }
-
-  public unsubscribe(event: AvailableEvents, callback: () => void): void {
-    const eventIndex = this.listeners.findIndex(
-      (item) => item.callback === callback && item.event === event
-    );
-
-    if (eventIndex === -1) {
-      return;
-    }
-
-    this.listeners.splice(eventIndex, 1);
   }
 }
 
