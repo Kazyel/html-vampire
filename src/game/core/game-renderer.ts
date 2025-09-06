@@ -1,7 +1,9 @@
-import type GameManager from "./game-manager";
+import type GameManager from './game-manager';
 
-import renderBlurBackground from "../services/ui/blur-background";
-import renderPauseScreen from "../services/ui/pause-screen";
+import { ScreenState } from '@/types/state';
+import renderBlurBackground from '../services/screen/blur-background';
+import renderPauseScreen from '../services/screen/pause-screen';
+import renderPowerUpScreen from '../services/screen/power-up-screen';
 
 class GameRenderer {
   private canvas: HTMLCanvasElement;
@@ -9,9 +11,13 @@ class GameRenderer {
   private ctx: CanvasRenderingContext2D | null;
   private tempCtx: CanvasRenderingContext2D | null;
 
-  private drawGame(gameCtx: GameManager, canvasCtx: CanvasRenderingContext2D): void {
-    const { player, enemies, projectiles, experiencePoints } = gameCtx.state;
+  public currentScreen: ScreenState = ScreenState.GAMEPLAY;
 
+  private drawGame(
+    gameCtx: GameManager,
+    canvasCtx: CanvasRenderingContext2D
+  ): void {
+    const { player, enemies, projectiles, experiencePoints } = gameCtx.state;
     player.drawEntity(canvasCtx);
 
     for (const enemy of enemies) {
@@ -32,35 +38,51 @@ class GameRenderer {
     renderPauseScreen(this.ctx!);
   }
 
+  private drawPowerUpScreen(): void {
+    renderBlurBackground(this.ctx!, this.tempCanvas);
+    renderPowerUpScreen(this.ctx!);
+  }
+
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
 
-    this.tempCanvas = document.createElement("canvas");
+    this.tempCanvas = document.createElement('canvas');
     this.tempCanvas.width = canvas.width;
     this.tempCanvas.height = canvas.height;
 
-    this.ctx = canvas.getContext("2d");
-    this.tempCtx = this.tempCanvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
+    this.tempCtx = this.tempCanvas.getContext('2d');
+  }
+
+  public setScreen(s: ScreenState) {
+    this.currentScreen = s;
   }
 
   public render(game: GameManager) {
     if (!this.ctx || !this.tempCtx) {
+      console.error('Failed to get 2D rendering context.');
       return;
     }
 
-    const { camera } = game.state;
-
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-
     this.tempCtx.save();
+
+    const { camera } = game.state;
     this.tempCtx.translate(-camera.x, -camera.y);
     this.drawGame(game, this.tempCtx);
+    this.tempCtx.restore();
 
-    if (game.isPaused) {
-      this.drawPauseScreen();
-    } else {
-      this.ctx.drawImage(this.tempCanvas, 0, 0);
+    switch (this.currentScreen) {
+      case ScreenState.PAUSE:
+        this.drawPauseScreen();
+        break;
+      case ScreenState.POWERUP:
+        this.drawPowerUpScreen();
+        break;
+      default:
+        this.ctx.drawImage(this.tempCanvas, 0, 0);
+        break;
     }
 
     this.tempCtx.restore();

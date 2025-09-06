@@ -1,7 +1,7 @@
-import type GameManager from "@/game/core/game-manager";
+import type GameManager from '@/game/core/game-manager';
 
-import getEnemiesInView from "@/game/utils/enemies-in-view";
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from "@/constants/dimensions";
+import getEnemiesInView from '@/game/utils/enemies-in-view';
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
 
 export const orchestrateAttack = (ctx: GameManager) => {
   const { enemies, player, camera } = ctx.state;
@@ -11,7 +11,7 @@ export const orchestrateAttack = (ctx: GameManager) => {
     camera.x,
     camera.y,
     CANVAS_WIDTH,
-    CANVAS_HEIGHT
+    CANVAS_HEIGHT,
   );
 
   for (const weapon of player.weapons) {

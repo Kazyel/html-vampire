@@ -1,7 +1,7 @@
-import type Enemy from "../entities/enemy";
-import type GameManager from "../../core/game-manager";
+import type Enemy from '../entities/enemy';
+import type GameManager from '../../core/game-manager';
 
-import Projectile from "../entities/projectile";
+import Projectile from '../entities/projectile';
 
 const DEFAULT_ATTACK_SPEED = 600; // -> milliseconds
 const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
@@ -29,7 +29,7 @@ class Weapon {
     asset: string,
     attackOffset: number = 0,
     projectileSpeed: number = DEFAULT_PROJECTILE_SPEED,
-    projectileDuration: number = DEFAULT_PROJECTILE_DURATION
+    projectileDuration: number = DEFAULT_PROJECTILE_DURATION,
   ) {
     this.name = name;
     this.damage = damage;
@@ -74,7 +74,7 @@ class Weapon {
         player.y,
         projectileWidth,
         projectileHeight,
-        this
+        this,
       );
 
       newProjectile.velocityX = directionX * 300;

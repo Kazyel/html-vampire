@@ -1,7 +1,7 @@
-import type GameManager from "@/game/core/game-manager";
-import type Weapon from "../items/weapon";
+import type GameManager from '@/game/core/game-manager';
+import type Weapon from '../items/weapon';
 
-import GameEntityObject from "./game-entity-object";
+import GameEntityObject from './game-entity-object';
 
 class Projectile extends GameEntityObject {
   public duration: number;
@@ -24,7 +24,13 @@ class Projectile extends GameEntityObject {
     }
   }
 
-  constructor(x: number, y: number, width: number, height: number, sourceWeapon: Weapon) {
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    sourceWeapon: Weapon,
+  ) {
     super(x, y);
 
     this.sourceWeapon = sourceWeapon;
@@ -57,7 +63,8 @@ class Projectile extends GameEntityObject {
     const sprite = this.sourceWeapon.getSprite();
     if (!sprite) return;
 
-    const rotationAngle = Math.atan2(this.velocityY, this.velocityX) - 1.5 * Math.PI;
+    const rotationAngle =
+      Math.atan2(this.velocityY, this.velocityX) - 1.5 * Math.PI;
 
     canvasCtx.save();
     canvasCtx.translate(this.x, this.y);

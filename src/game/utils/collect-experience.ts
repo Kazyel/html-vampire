@@ -1,7 +1,10 @@
-import type GameManager from "../core/game-manager";
-import type ExperiencePoint from "../models/entities/experience-point";
+import type GameManager from '../core/game-manager';
+import type ExperiencePoint from '../models/entities/experience-point';
 
-const collectExperience = (ctx: GameManager, experiencePoint: ExperiencePoint) => {
+const collectExperience = (
+  ctx: GameManager,
+  experiencePoint: ExperiencePoint,
+) => {
   const { player } = ctx.state;
 
   experiencePoint.shouldRemove = true;
@@ -9,7 +12,7 @@ const collectExperience = (ctx: GameManager, experiencePoint: ExperiencePoint) =
   player.currentExp += experiencePoint.value;
   player.totalExp += experiencePoint.value;
 
-  ctx.events.emitEvent("experienceUpdate");
+  ctx.events.emitEvent('experienceUpdate');
   player.canLevelUp(ctx);
 };
 

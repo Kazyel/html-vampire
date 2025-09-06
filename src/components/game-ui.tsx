@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import { useGameContext } from "@/context/game-context";
+import { useEffect, useState } from 'react';
+import { useGameContext } from '@/context/game-context';
 
 const GameUI = () => {
   const ctx = useGameContext();
 
   const [playerHealth, setPlayerHealth] = useState(ctx.state.player.health);
   const [playerKills, setPlayerKills] = useState(0);
-  const [playerExperience, setPlayerExperience] = useState(ctx.state.player.currentExp);
+  const [playerExperience, setPlayerExperience] = useState(
+    ctx.state.player.currentExp
+  );
   const [playerLevel, setPlayerLevel] = useState(ctx.state.player.level);
 
   useEffect(() => {
@@ -33,16 +35,16 @@ const GameUI = () => {
       setPlayerLevel(ctx.state.player.level);
     };
 
-    ctx.events.subscribe("healthUpdate", handleHealthUpdate);
-    ctx.events.subscribe("killUpdate", handleKillsUpdate);
-    ctx.events.subscribe("experienceUpdate", handleExperienceUpdate);
-    ctx.events.subscribe("levelUp", handleLevelUpdate);
+    ctx.events.on('healthUpdate', handleHealthUpdate);
+    ctx.events.on('killUpdate', handleKillsUpdate);
+    ctx.events.on('experienceUpdate', handleExperienceUpdate);
+    ctx.events.on('levelUp', handleLevelUpdate);
 
     return () => {
-      ctx.events.unsubscribe("healthUpdate", handleHealthUpdate);
-      ctx.events.unsubscribe("experienceUpdate", handleExperienceUpdate);
-      ctx.events.unsubscribe("killUpdate", handleKillsUpdate);
-      ctx.events.unsubscribe("levelUp", handleLevelUpdate);
+      ctx.events.off('healthUpdate', handleHealthUpdate);
+      ctx.events.off('experienceUpdate', handleExperienceUpdate);
+      ctx.events.off('killUpdate', handleKillsUpdate);
+      ctx.events.off('levelUp', handleLevelUpdate);
     };
   }, [ctx]);
 

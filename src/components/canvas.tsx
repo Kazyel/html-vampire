@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
-import { useGameContext } from "@/context/game-context";
-import GameRenderer from "@/game/core/game-renderer";
+import { useEffect, useRef } from 'react';
+import { useGameContext } from '@/context/game-context';
+import GameRenderer from '@/game/core/game-renderer';
+import UIEventHandler from '@/game/services/ui-event-handler';
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -13,11 +14,14 @@ const Canvas = () => {
     }
 
     const renderer = new GameRenderer(canvasRef.current);
+    const uiEvents = new UIEventHandler(game, renderer);
 
     const gameLoop = (timestamp: number) => {
       game.updateTime(timestamp);
-      game.run();
+
+      game.run(renderer);
       renderer.render(game);
+      uiEvents.init();
 
       animationFrameId.current = requestAnimationFrame(gameLoop);
     };
