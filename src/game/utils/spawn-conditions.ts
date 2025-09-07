@@ -1,5 +1,5 @@
 import type Player from '@/game/models/entities/player';
-import type Camera from '../core/camera';
+import type Camera from '../models/camera';
 
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
 
@@ -7,7 +7,7 @@ const PLAYER_SAFE_RADIUS = 800;
 
 export const checkSpawnRadius = (
   player: Player,
-  coords: { x: number; y: number },
+  coords: { x: number; y: number }
 ) => {
   const dx = player.x - coords.x;
   const dy = player.y - coords.y;

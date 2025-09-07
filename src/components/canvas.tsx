@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useGameContext } from '@/context/game-context';
+
 import GameRenderer from '@/game/core/game-renderer';
-import UIEventHandler from '@/game/services/ui-event-handler';
+import UIEventService from '@/game/services/ui-event-service';
+
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -13,14 +16,14 @@ const Canvas = () => {
       return;
     }
 
-    const renderer = new GameRenderer(canvasRef.current);
-    const uiEvents = new UIEventHandler(game, renderer);
+    const screen = new GameRenderer(canvasRef.current);
+    const uiEvents = new UIEventService(game, screen);
 
     const gameLoop = (timestamp: number) => {
       game.updateTime(timestamp);
+      game.run(screen);
+      screen.render(game);
 
-      game.run(renderer);
-      renderer.render(game);
       uiEvents.init();
 
       animationFrameId.current = requestAnimationFrame(gameLoop);
@@ -37,11 +40,11 @@ const Canvas = () => {
 
   return (
     <canvas
-      className="border-2 rounded-md mt-10 border-white/25"
-      width={1600}
-      height={900}
+      className="border-2 rounded-md mt-4 border-white/25"
+      width={CANVAS_WIDTH}
+      height={CANVAS_HEIGHT}
       ref={canvasRef}
-    ></canvas>
+    />
   );
 };
 

@@ -3,7 +3,7 @@ import type ExperiencePoint from '../models/entities/experience-point';
 
 const collectExperience = (
   ctx: GameManager,
-  experiencePoint: ExperiencePoint,
+  experiencePoint: ExperiencePoint
 ) => {
   const { player } = ctx.state;
 
@@ -11,9 +11,9 @@ const collectExperience = (
 
   player.currentExp += experiencePoint.value;
   player.totalExp += experiencePoint.value;
+  player.canLevelUp(ctx);
 
   ctx.events.emitEvent('experienceUpdate');
-  player.canLevelUp(ctx);
 };
 
 export default collectExperience;

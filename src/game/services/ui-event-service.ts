@@ -1,10 +1,10 @@
 import { ScreenState } from '@/types/state';
-import type EventBus from '../core/event-bus';
+import type GameEventBus from '../core/game-event-bus';
 import type GameManager from '../core/game-manager';
 import type GameRenderer from '../core/game-renderer';
 
-class UIEventHandler {
-  private eventBus: EventBus;
+class UIEventService {
+  private eventBus: GameEventBus;
   private renderer: GameRenderer;
   private game: GameManager;
 
@@ -30,4 +30,4 @@ class UIEventHandler {
   }
 }
 
-export default UIEventHandler;
+export default UIEventService;

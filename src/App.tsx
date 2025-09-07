@@ -5,7 +5,7 @@ import GameUI from '@/components/game-ui';
 function App() {
   return (
     <GameProvider>
-      <div className="size-full flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <Canvas />
         <GameUI />
       </div>

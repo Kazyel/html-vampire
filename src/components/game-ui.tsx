@@ -7,7 +7,7 @@ const GameUI = () => {
   const [playerHealth, setPlayerHealth] = useState(ctx.state.player.health);
   const [playerKills, setPlayerKills] = useState(0);
   const [playerExperience, setPlayerExperience] = useState(
-    ctx.state.player.currentExp
+    ctx.state.player.totalExp
   );
   const [playerLevel, setPlayerLevel] = useState(ctx.state.player.level);
 
@@ -17,7 +17,7 @@ const GameUI = () => {
     };
 
     const handleExperienceUpdate = () => {
-      setPlayerExperience(ctx.state.player.currentExp);
+      setPlayerExperience(ctx.state.player.totalExp);
     };
 
     const handleKillsUpdate = () => {
@@ -49,11 +49,19 @@ const GameUI = () => {
   }, [ctx]);
 
   return (
-    <div className="flex gap-x-2">
-      <p className="text-white/75 font-bold">Health: {playerHealth}</p>
-      <p className="text-white/75 font-bold">Kills: {playerKills}</p>
-      <p className="text-white/75 font-bold">Experience: {playerExperience}</p>
-      <p className="text-white/75 font-bold">Level: {playerLevel}</p>
+    <div className="flex gap-x-5 flex-1 justify-center items-center">
+      <p className="text-white/75 font-bold text-lg">
+        <span className="text-red-600">Health:</span> {playerHealth}
+      </p>
+      <p className="text-white/75 font-bold text-lg">
+        <span className="text-amber-400">Kills:</span> {playerKills}
+      </p>
+      <p className="text-white/75 font-bold text-lg">
+        <span className="text-emerald-300">Experience:</span> {playerExperience}
+      </p>
+      <p className="text-white/75 font-bold text-lg">
+        <span className="text-cyan-400">Level:</span> {playerLevel}
+      </p>
     </div>
   );
 };

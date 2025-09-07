@@ -1,47 +1,17 @@
 import type GameManager from './game-manager';
 
 import { ScreenState } from '@/types/state';
-import renderBlurBackground from '../services/screen/blur-background';
-import renderPauseScreen from '../services/screen/pause-screen';
-import renderPowerUpScreen from '../services/screen/power-up-screen';
+
+import GameScreenManager from './game-screen-manager';
 
 class GameRenderer {
-  private canvas: HTMLCanvasElement;
-  private tempCanvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D | null;
-  private tempCtx: CanvasRenderingContext2D | null;
+  public canvas: HTMLCanvasElement;
+  public tempCanvas: HTMLCanvasElement;
+  public ctx: CanvasRenderingContext2D | null;
+  public tempCtx: CanvasRenderingContext2D | null;
 
-  public currentScreen: ScreenState = ScreenState.GAMEPLAY;
-
-  private drawGame(
-    gameCtx: GameManager,
-    canvasCtx: CanvasRenderingContext2D
-  ): void {
-    const { player, enemies, projectiles, experiencePoints } = gameCtx.state;
-    player.drawEntity(canvasCtx);
-
-    for (const enemy of enemies) {
-      enemy.drawEntity(canvasCtx);
-    }
-
-    for (const experiencePoint of experiencePoints) {
-      experiencePoint.drawEntity(canvasCtx);
-    }
-
-    for (const projectile of projectiles) {
-      projectile.draw(canvasCtx);
-    }
-  }
-
-  private drawPauseScreen(): void {
-    renderBlurBackground(this.ctx!, this.tempCanvas);
-    renderPauseScreen(this.ctx!);
-  }
-
-  private drawPowerUpScreen(): void {
-    renderBlurBackground(this.ctx!, this.tempCanvas);
-    renderPowerUpScreen(this.ctx!);
-  }
+  public screenState: ScreenState = ScreenState.GAMEPLAY;
+  public screens: GameScreenManager;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -52,10 +22,12 @@ class GameRenderer {
 
     this.ctx = canvas.getContext('2d');
     this.tempCtx = this.tempCanvas.getContext('2d');
+
+    this.screens = new GameScreenManager();
   }
 
   public setScreen(s: ScreenState) {
-    this.currentScreen = s;
+    this.screenState = s;
   }
 
   public render(game: GameManager) {
@@ -64,21 +36,14 @@ class GameRenderer {
       return;
     }
 
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
-    this.tempCtx.save();
+    this.screens.drawGameplayScreen(this, game);
 
-    const { camera } = game.state;
-    this.tempCtx.translate(-camera.x, -camera.y);
-    this.drawGame(game, this.tempCtx);
-    this.tempCtx.restore();
-
-    switch (this.currentScreen) {
+    switch (this.screenState) {
       case ScreenState.PAUSE:
-        this.drawPauseScreen();
+        this.screens.drawPauseScreen(this);
         break;
       case ScreenState.POWERUP:
-        this.drawPowerUpScreen();
+        this.screens.drawPowerUpScreen(this);
         break;
       default:
         this.ctx.drawImage(this.tempCanvas, 0, 0);
