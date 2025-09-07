@@ -2,13 +2,13 @@ import type Enemy from './enemy';
 import type GameManager from '@/game/core/game-manager';
 import type { MovementKeys } from '@/types/keyboard';
 
+import Weapon from '../items/weapon';
 import GameEntityObject from './game-entity-object';
+import checkMapBounds from '@/game/utils/check-map-bounds';
 import {
   orchestrateAttack,
   updateProjectiles,
-} from '@/game/services/player/attack-manager';
-import Weapon from '../items/weapon';
-import checkMapBounds from '@/game/utils/check-map-bounds';
+} from '@/game/utils/attack-manager';
 
 const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
@@ -64,7 +64,7 @@ export default class Player extends GameEntityObject {
     const LATE_RATE = 2;
 
     return Math.floor(
-      xpAtTransitionLevel * Math.pow(LATE_RATE, this.level - TRANSITION_LEVEL),
+      xpAtTransitionLevel * Math.pow(LATE_RATE, this.level - TRANSITION_LEVEL)
     );
   }
 

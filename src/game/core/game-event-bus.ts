@@ -1,6 +1,6 @@
 import type { AvailableEvents } from '@/types/events';
 
-class EventBus {
+class GameEventBus {
   private listeners: Map<AvailableEvents, Array<() => void>> = new Map();
 
   public on(event: AvailableEvents, callback: () => void): void {
@@ -32,4 +32,4 @@ class EventBus {
   }
 }
 
-export default EventBus;
+export default GameEventBus;

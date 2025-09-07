@@ -1,6 +1,6 @@
-import type GameManager from '../../core/game-manager';
+import type GameManager from './game-manager';
 
-import EnemyWaveService from './enemy-wave-service';
+import EnemyWaveService from '../services/enemy/enemy-wave-service';
 
 class GameEnemyManager {
   private waveService: EnemyWaveService;

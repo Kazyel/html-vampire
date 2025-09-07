@@ -1,14 +1,24 @@
 import type GameManager from '../core/game-manager';
 import type Enemy from '../models/entities/enemy';
 import type ExperiencePoint from '../models/entities/experience-point';
-import collectExperience from '../utils/collect-experience';
+
+import collectExperience from '../events/collect-experience';
+import killEnemy from '../events/kill-enemy';
+import playerTakesDamage from '../events/player-take-damage';
 
 import {
   buildSpatialGrid,
   getPotentialColliders,
 } from '../utils/spatial-hashing';
 
-class GameCollisionManager {
+/**
+ * TODO:
+ *  Add a generic function to check collision between two entities
+ *  Transform this class into a service for specific collision checks
+ *  Then create a another manager for handling all collision checks
+ */
+
+class GameCollisionService {
   public checkEnemyHittingPlayer(ctx: GameManager): void {
     const { player, enemies } = ctx.state;
 
@@ -16,15 +26,14 @@ class GameCollisionManager {
     const potentialEnemies = getPotentialColliders<Enemy>(
       player.x,
       player.y,
-      spatialGrid,
+      spatialGrid
     );
 
     for (const enemy of potentialEnemies) {
       const hasCollided = player.checkEnemyCollision(enemy);
 
       if (hasCollided && player.damageCooldown <= 0) {
-        player.takeDamage(enemy.damage);
-        ctx.events.emitEvent('healthUpdate');
+        playerTakesDamage(player, enemy, ctx);
       }
     }
   }
@@ -36,7 +45,7 @@ class GameCollisionManager {
     const potentialExperiencePoints = getPotentialColliders<ExperiencePoint>(
       player.x,
       player.y,
-      spatialGrid,
+      spatialGrid
     );
 
     for (const experiencePoint of potentialExperiencePoints) {
@@ -62,7 +71,7 @@ class GameCollisionManager {
       const potentialEnemies = getPotentialColliders<Enemy>(
         projectile.x,
         projectile.y,
-        spatialGrid,
+        spatialGrid
       );
 
       for (const enemy of potentialEnemies) {
@@ -71,15 +80,7 @@ class GameCollisionManager {
         }
 
         if (projectile.checkEnemyCollision(enemy)) {
-          projectile.shouldRemove = true;
-          enemy.takeDamage(projectile.damage);
-
-          if (projectile.sourceWeapon && enemy.health <= 0) {
-            projectile.sourceWeapon.kills++;
-            enemy.onDeathUpdate(ctx);
-            ctx.events.emitEvent('killUpdate');
-          }
-          return;
+          killEnemy(enemy, projectile, ctx);
         }
       }
     }
@@ -95,7 +96,7 @@ class GameCollisionManager {
       const potentialColliders = getPotentialColliders(
         enemy.x,
         enemy.y,
-        spatialGrid,
+        spatialGrid
       );
 
       for (const otherEnemy of potentialColliders) {
@@ -126,4 +127,4 @@ class GameCollisionManager {
   }
 }
 
-export default GameCollisionManager;
+export default GameCollisionService;
