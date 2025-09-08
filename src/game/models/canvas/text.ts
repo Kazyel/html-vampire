@@ -24,7 +24,9 @@ class Text {
 
   public draw(canvasCtx: CanvasRenderingContext2D): void {
     canvasCtx.font = `bold ${this.fontSize}px ${this.fontFamily}`;
+
     canvasCtx.textAlign = 'center';
+
     canvasCtx.fillStyle = this.color;
     canvasCtx.fillText(this.text, this.x, this.y);
   }

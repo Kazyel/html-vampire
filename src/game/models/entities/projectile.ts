@@ -12,24 +12,12 @@ class Projectile extends GameEntityObject {
   public shouldRemove: boolean;
   public sourceWeapon: Weapon;
 
-  private moveProjectile(tick: number): void {
-    this.x += this.velocityX * (tick / this.speed);
-    this.y += this.velocityY * (tick / this.speed);
-  }
-
-  private didExpire(tick: number): void {
-    this.duration -= tick;
-    if (this.duration <= 0) {
-      this.shouldRemove = true;
-    }
-  }
-
   constructor(
     x: number,
     y: number,
     width: number,
     height: number,
-    sourceWeapon: Weapon,
+    sourceWeapon: Weapon
   ) {
     super(x, y);
 
@@ -44,6 +32,18 @@ class Projectile extends GameEntityObject {
     this.velocityY = 0;
 
     this.shouldRemove = false;
+  }
+
+  private moveProjectile(tick: number): void {
+    this.x += this.velocityX * (tick / this.speed);
+    this.y += this.velocityY * (tick / this.speed);
+  }
+
+  private didExpire(tick: number): void {
+    this.duration -= tick;
+    if (this.duration <= 0) {
+      this.shouldRemove = true;
+    }
   }
 
   public checkEnemyCollision(enemy: GameEntityObject) {

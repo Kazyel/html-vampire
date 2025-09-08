@@ -12,29 +12,28 @@ const Canvas = () => {
   const game = useGameContext();
 
   useEffect(() => {
-    if (!canvasRef.current || !game) {
-      return;
-    }
+    if (!canvasRef.current || !game) return;
 
-    const screen = new GameRenderer(canvasRef.current);
-    const uiEvents = new UIEventService(game, screen);
+    const screen = new GameRenderer(canvasRef.current!);
+    const uiEvents = new UIEventService(game);
 
-    const gameLoop = (timestamp: number) => {
-      game.updateTime(timestamp);
-      game.run(screen);
-      screen.render(game);
+    game.assets.whenReady().then(() => {
+      const gameLoop = (timestamp: number) => {
+        game.updateTime(timestamp);
+        game.run();
+        screen.render(game);
 
-      uiEvents.init();
+        uiEvents.init();
+
+        animationFrameId.current = requestAnimationFrame(gameLoop);
+      };
 
       animationFrameId.current = requestAnimationFrame(gameLoop);
-    };
-
-    animationFrameId.current = requestAnimationFrame(gameLoop);
+    });
 
     return () => {
-      if (animationFrameId.current) {
+      if (animationFrameId.current)
         cancelAnimationFrame(animationFrameId.current);
-      }
     };
   }, [game]);
 
