@@ -14,6 +14,10 @@ class PlayerInputService {
 
   private justPressed: Set<string> = new Set();
 
+  constructor() {
+    this.initMovementKeys();
+  }
+
   private initMovementKeys() {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (
@@ -40,10 +44,6 @@ class PlayerInputService {
         this.basicKeys[e.key as keyof BasicKeys] = false;
       }
     });
-  }
-
-  constructor() {
-    this.initMovementKeys();
   }
 
   public keyJustPressed(key: keyof BasicKeys | keyof MovementKeys): boolean {

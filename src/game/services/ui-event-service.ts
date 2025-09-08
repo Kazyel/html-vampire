@@ -1,23 +1,20 @@
 import { ScreenState } from '@/types/state';
 import type GameEventBus from '../core/game-event-bus';
 import type GameManager from '../core/game-manager';
-import type GameRenderer from '../core/game-renderer';
 
 class UIEventService {
   private eventBus: GameEventBus;
-  private renderer: GameRenderer;
   private game: GameManager;
 
-  constructor(game: GameManager, renderer: GameRenderer) {
-    this.renderer = renderer;
+  constructor(game: GameManager) {
     this.eventBus = game.events;
     this.game = game;
   }
 
   private openPowerUpScreen() {
     this.eventBus.on('levelUp', () => {
-      this.renderer.setScreen(ScreenState.POWERUP);
-      this.game.pause(this.renderer, ScreenState.POWERUP);
+      this.game.screen.state = ScreenState.POWERUP;
+      this.game.pause(ScreenState.POWERUP);
     });
   }
 

@@ -18,18 +18,13 @@ class Weapon {
   public attackSpeed: number;
   public kills: number;
 
-  private loadImage(asset: string) {
-    this.sprite = new Image();
-    this.sprite.src = asset;
-  }
-
   constructor(
     name: string,
     damage: number,
     asset: string,
     attackOffset: number = 0,
     projectileSpeed: number = DEFAULT_PROJECTILE_SPEED,
-    projectileDuration: number = DEFAULT_PROJECTILE_DURATION,
+    projectileDuration: number = DEFAULT_PROJECTILE_DURATION
   ) {
     this.name = name;
     this.damage = damage;
@@ -42,6 +37,11 @@ class Weapon {
 
     this.sprite = null;
     this.loadImage(asset);
+  }
+
+  private loadImage(asset: string) {
+    this.sprite = new Image();
+    this.sprite.src = asset;
   }
 
   public canAttack(tick: number): boolean {
@@ -74,7 +74,7 @@ class Weapon {
         player.y,
         projectileWidth,
         projectileHeight,
-        this,
+        this
       );
 
       newProjectile.velocityX = directionX * 300;

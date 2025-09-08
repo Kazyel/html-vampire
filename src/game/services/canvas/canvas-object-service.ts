@@ -1,12 +1,12 @@
-import Rectangle from '@/game/models/render/rectangle';
-import Text from '@/game/models/render/text';
+import Rectangle from '@/game/models/canvas/rectangle';
+import Text from '@/game/models/canvas/text';
 
 /**
  * TODO:
  *  Create a service for creating basic game objects
  */
 
-class RenderObjectService {
+class CanvasObjectService {
   public createRect(
     x: number,
     y: number,
@@ -28,4 +28,4 @@ class RenderObjectService {
   }
 }
 
-export default RenderObjectService;
+export default CanvasObjectService;
