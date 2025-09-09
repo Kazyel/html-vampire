@@ -12,6 +12,7 @@ class AssetLoader {
       { key: 'flat_frame_default', src: '/assets/ui/flat_frame_default.png' },
       { key: 'bullet', src: '/assets/weapons/bullet.png' },
       { key: 'experience', src: '/assets/drops/exp.png' },
+      { key: 'chest_normal', src: '/assets/drops/chest_normal.png' },
       { key: 'powerup_0', src: '/assets/powerups/powerup_0.png' },
       { key: 'powerup_1', src: '/assets/powerups/powerup_1.png' },
       { key: 'powerup_2', src: '/assets/powerups/powerup_2.png' },

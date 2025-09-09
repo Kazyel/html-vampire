@@ -1,7 +1,5 @@
 const DEFAULT_GAME_ENTITY_WIDTH = 25;
 const DEFAULT_GAME_ENTITY_HEIGHT = 25;
-const DEFAULT_GAME_ENTITY_SPEED = 75;
-const DEFAULT_GAME_ENTITY_HEALTH = 25;
 const DEFAULT_GAME_ENTITY_COLOR = 'pink';
 
 class GameEntityObject {
@@ -10,8 +8,6 @@ class GameEntityObject {
   public width: number;
   public height: number;
   public color: string;
-  public health: number;
-  public movementSpeed: number;
 
   constructor(x: number, y: number, color: string = DEFAULT_GAME_ENTITY_COLOR) {
     this.x = x;
@@ -20,8 +16,6 @@ class GameEntityObject {
 
     this.width = DEFAULT_GAME_ENTITY_WIDTH;
     this.height = DEFAULT_GAME_ENTITY_HEIGHT;
-    this.health = DEFAULT_GAME_ENTITY_HEALTH;
-    this.movementSpeed = DEFAULT_GAME_ENTITY_SPEED;
   }
 
   public drawEntity = (context: CanvasRenderingContext2D): void => {

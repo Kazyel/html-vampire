@@ -1,6 +1,6 @@
 import type GameEngine from '../core/game-engine';
 import type Enemy from '../models/entities/enemy';
-import type ExperiencePoint from '../models/entities/experience-point';
+import type ExperiencePoint from '../models/entities/drops/experience-point';
 
 import collectExperience from '../events/collect-experience';
 import killEnemy from '../events/kill-enemy';

@@ -1,5 +1,6 @@
 import type GameEngine from '@/game/core/game-engine';
 import type Weapon from '../items/weapon';
+import type Enemy from './enemy';
 
 import GameEntityObject from './game-entity-object';
 
@@ -9,9 +10,11 @@ class Projectile extends GameEntityObject {
   public speed: number;
   public velocityX: number;
   public velocityY: number;
-  public shouldRemove: boolean;
-  public sourceWeapon: Weapon;
   public pierceCount: number;
+
+  public sourceWeapon: Weapon;
+  public hitEnemies: Set<Enemy>;
+  public shouldRemove: boolean;
 
   constructor(
     x: number,
@@ -22,7 +25,6 @@ class Projectile extends GameEntityObject {
   ) {
     super(x, y);
 
-    this.sourceWeapon = sourceWeapon;
     this.duration = sourceWeapon.projectileDuration;
     this.speed = sourceWeapon.projectileSpeed;
     this.damage = sourceWeapon.damage;
@@ -33,6 +35,8 @@ class Projectile extends GameEntityObject {
     this.velocityX = 0;
     this.velocityY = 0;
 
+    this.sourceWeapon = sourceWeapon;
+    this.hitEnemies = new Set();
     this.shouldRemove = false;
   }
 
