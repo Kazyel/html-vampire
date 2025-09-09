@@ -1,23 +1,28 @@
-import type Player from './player';
-
-import GameEntityObject from './game-entity-object';
+import type Player from '../player';
 import type AssetLoader from '@/game/core/asset-loader';
+import type GameEngine from '@/game/core/game-engine';
 
-const DEFAULT_EXP_WIDTH = 16;
-const DEFAULT_EXP_HEIGHT = 16;
+import GameEntityObject from '../game-entity-object';
+
+import { EXPERIENCE_SIZE } from '@/constants/dimensions';
 
 class ExperiencePoint extends GameEntityObject {
   public shouldRemove: boolean;
   public value: number;
 
   constructor(x: number, y: number, value: number = 30) {
-    super(x + DEFAULT_EXP_WIDTH / 2, y + DEFAULT_EXP_HEIGHT / 2);
+    super(x, y);
 
-    this.width = DEFAULT_EXP_WIDTH;
-    this.height = DEFAULT_EXP_HEIGHT;
+    this.width = EXPERIENCE_SIZE;
+    this.height = EXPERIENCE_SIZE;
 
     this.value = value;
     this.shouldRemove = false;
+  }
+
+  public spawn(ctx: GameEngine): void {
+    const { experiencePoints } = ctx.state;
+    experiencePoints.push(this);
   }
 
   public draw(canvasCtx: CanvasRenderingContext2D, assets: AssetLoader): void {
@@ -25,13 +30,7 @@ class ExperiencePoint extends GameEntityObject {
     if (!sprite) return;
 
     canvasCtx.imageSmoothingEnabled = false;
-    canvasCtx.drawImage(
-      sprite,
-      this.x - this.width / 2,
-      this.y - this.height / 2,
-      this.width,
-      this.height
-    );
+    canvasCtx.drawImage(sprite, this.x, this.y, this.width, this.height);
     canvasCtx.imageSmoothingEnabled = true;
   }
 

@@ -1,4 +1,4 @@
-import type Camera from '../models/camera';
+import type Camera from '../core/camera';
 
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
 

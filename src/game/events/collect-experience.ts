@@ -1,5 +1,5 @@
 import type GameEngine from '../core/game-engine';
-import type ExperiencePoint from '../models/entities/experience-point';
+import type ExperiencePoint from '../models/entities/drops/experience-point';
 
 const collectExperience = (
   ctx: GameEngine,

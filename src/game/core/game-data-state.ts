@@ -1,12 +1,13 @@
 import type Projectile from '@/game/models/entities/projectile';
 import type Enemy from '../models/entities/enemy';
-import type ExperiencePoint from '../models/entities/experience-point';
+import type ExperiencePoint from '../models/entities/drops/experience-point';
 
 import GameCollisionService from '@/game/services/game-collision-service';
 import Player from '@/game/models/entities/player';
-import Camera from '../models/camera';
+import Camera from './camera';
 
 import { MAP_HEIGHT, MAP_WIDTH } from '@/constants/dimensions';
+import type Chest from '../models/entities/drops/chest';
 
 class GameDataState {
   public camera: Camera;
@@ -15,6 +16,7 @@ class GameDataState {
   public enemies: Array<Enemy>;
   public projectiles: Array<Projectile>;
   public experiencePoints: Array<ExperiencePoint>;
+  public chests: Array<Chest>;
 
   constructor() {
     this.camera = new Camera(0, 0);
@@ -24,6 +26,7 @@ class GameDataState {
     this.enemies = [];
     this.projectiles = [];
     this.experiencePoints = [];
+    this.chests = [];
   }
 }
 

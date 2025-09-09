@@ -23,7 +23,7 @@ class GameRenderer {
     const { tempCtx } = this;
     if (!tempCtx) return;
 
-    const { player, enemies, projectiles, experiencePoints, camera } =
+    const { player, enemies, projectiles, experiencePoints, camera, chests } =
       gameCtx.state;
 
     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
@@ -39,6 +39,10 @@ class GameRenderer {
 
     for (const experiencePoint of experiencePoints) {
       experiencePoint.draw(tempCtx, gameCtx.assets);
+    }
+
+    for (const chest of chests) {
+      chest.draw(tempCtx, gameCtx.assets);
     }
 
     for (const projectile of projectiles) {

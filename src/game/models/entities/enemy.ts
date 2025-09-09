@@ -1,16 +1,34 @@
 import type GameEngine from '@/game/core/game-engine';
 
 import GameEntityObject from './game-entity-object';
-import ExperiencePoint from './experience-point';
+import ExperiencePoint from './drops/experience-point';
 
 class Enemy extends GameEntityObject {
   public damage: number;
+  public health: number;
+  public movementSpeed: number;
+  public experienceDropValue: number;
   public shouldRemove: boolean;
+  public type: 'small' | 'rare';
 
-  constructor(x: number, y: number, color: string) {
+  constructor(
+    x: number,
+    y: number,
+    color: string,
+    damage: number,
+    health: number = 20,
+    movementSpeed: number = 75,
+    experienceDropValue: number = 15,
+    type: 'small' | 'rare' = 'small'
+  ) {
     super(x, y, color);
 
-    this.damage = 1;
+    this.health = health;
+    this.damage = damage;
+    this.experienceDropValue = experienceDropValue;
+    this.movementSpeed = movementSpeed;
+    this.type = type;
+
     this.shouldRemove = false;
   }
 
@@ -36,7 +54,13 @@ class Enemy extends GameEntityObject {
 
   public onDeathUpdate(ctx: GameEngine) {
     this.shouldRemove = true;
-    ctx.state.experiencePoints.push(new ExperiencePoint(this.x, this.y));
+
+    const expSpawnX = this.x + this.width / 2 - 16 / 2;
+    const expSpawnY = this.y + this.height / 2 - 16 / 2;
+
+    new ExperiencePoint(expSpawnX, expSpawnY, this.experienceDropValue).spawn(
+      ctx
+    );
   }
 }
 

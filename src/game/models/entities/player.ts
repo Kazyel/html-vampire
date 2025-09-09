@@ -5,12 +5,13 @@ import type { MovementKeys } from '@/types/inputs';
 import Weapon from '../items/weapon';
 import GameEntityObject from './game-entity-object';
 import checkMapBounds from '@/game/utils/check-map-bounds';
+import Inventory from '../items/inventory';
+import Circle from '../canvas/circle';
+
 import {
   orchestrateAttack,
   updateProjectiles,
 } from '@/game/utils/attack-manager';
-import Inventory from '../items/inventory';
-import Circle from '../canvas/circle';
 
 const PLAYER_MAX_LEVEL = 100;
 const DEFAULT_PLAYER_HEALTH = 15;
@@ -19,10 +20,10 @@ const PLAYER_INVULNERABILITY_TIME = 300;
 const PLAYER_BASE_XP = 50;
 
 export default class Player extends GameEntityObject {
-  public inventory: Inventory;
-  public currentHealth: number;
-
   public level: number;
+  public currentHealth: number;
+  public health: number;
+  public movementSpeed: number;
 
   public totalExp: number;
   public currentExp: number;
@@ -30,8 +31,9 @@ export default class Player extends GameEntityObject {
   public expPickupRange: number;
   public expRangeCircle: Circle;
 
-  public damageCooldown: number;
   private hitboxPadding: number;
+  public damageCooldown: number;
+  public inventory: Inventory;
 
   constructor(x: number, y: number, color: string) {
     super(x, y, color);

@@ -7,6 +7,12 @@ const killEnemy = (enemy: Enemy, projectile: Projectile, ctx: GameEngine) => {
     return;
   }
 
+  if (projectile.hitEnemies.has(enemy)) {
+    return;
+  }
+
+  projectile.hitEnemies.add(enemy);
+
   enemy.takeDamage(projectile.damage);
   projectile.pierceCount--;
 
