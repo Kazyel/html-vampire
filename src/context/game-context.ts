@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
-import GameManager from '@/game/core/game-manager';
+import GameEngine from '@/game/core/game-engine';
 
-const GameContext = createContext<GameManager | undefined>(undefined);
+const GameContext = createContext<GameEngine | undefined>(undefined);
 
 export const useGameContext = () => {
   const context = useContext(GameContext);

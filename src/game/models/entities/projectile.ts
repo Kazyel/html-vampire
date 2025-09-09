@@ -1,4 +1,4 @@
-import type GameManager from '@/game/core/game-manager';
+import type GameEngine from '@/game/core/game-engine';
 import type Weapon from '../items/weapon';
 
 import GameEntityObject from './game-entity-object';
@@ -73,7 +73,7 @@ class Projectile extends GameEntityObject {
     canvasCtx.restore();
   }
 
-  public update(ctx: GameManager): void {
+  public update(ctx: GameEngine): void {
     this.moveProjectile(ctx.LOGIC_TICK);
     this.didExpire(ctx.LOGIC_TICK);
   }

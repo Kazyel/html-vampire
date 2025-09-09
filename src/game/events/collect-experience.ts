@@ -1,8 +1,8 @@
-import type GameManager from '../core/game-manager';
+import type GameEngine from '../core/game-engine';
 import type ExperiencePoint from '../models/entities/experience-point';
 
 const collectExperience = (
-  ctx: GameManager,
+  ctx: GameEngine,
   experiencePoint: ExperiencePoint
 ) => {
   const { player } = ctx.state;

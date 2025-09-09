@@ -1,5 +1,5 @@
 import type Enemy from '../entities/enemy';
-import type GameManager from '../../core/game-manager';
+import type GameEngine from '../../core/game-engine';
 
 import Projectile from '../entities/projectile';
 
@@ -53,7 +53,7 @@ class Weapon {
     return false;
   }
 
-  public fireWeapon(ctx: GameManager, nearestEnemy: Enemy) {
+  public fireWeapon(ctx: GameEngine, nearestEnemy: Enemy) {
     const { player, projectiles } = ctx.state;
 
     if (nearestEnemy) {

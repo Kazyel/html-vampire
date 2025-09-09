@@ -1,8 +1,8 @@
-import type GameManager from '@/game/core/game-manager';
+import type GameEngine from '@/game/core/game-engine';
 import type Enemy from '@/game/models/entities/enemy';
 import type Projectile from '@/game/models/entities/projectile';
 
-const killEnemy = (enemy: Enemy, projectile: Projectile, ctx: GameManager) => {
+const killEnemy = (enemy: Enemy, projectile: Projectile, ctx: GameEngine) => {
   enemy.takeDamage(projectile.damage);
   projectile.shouldRemove = true;
 

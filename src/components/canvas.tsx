@@ -8,6 +8,7 @@ import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
+
   const game = useGameContext();
 
   useEffect(() => {

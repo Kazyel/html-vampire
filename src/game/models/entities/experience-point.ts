@@ -18,17 +18,25 @@ class ExperiencePoint extends GameEntityObject {
     this.shouldRemove = false;
   }
 
-  public checkPlayerRange(player: Player): boolean {
-    const { x, y, width, height, expPickupRange } = player;
+  public checkPlayerExpRange(player: Player): boolean {
+    const { expRangeCircle } = player;
 
-    const leftSize = this.x < x + expPickupRange + width;
-    const rightSize = this.x + this.width > x - expPickupRange;
-    const topSize = this.y < y + height + expPickupRange;
-    const bottomSize = this.y + this.height > y;
+    const closestX = Math.max(
+      this.x,
+      Math.min(expRangeCircle.x, this.x + this.width)
+    );
+    const closestY = Math.max(
+      this.y,
+      Math.min(expRangeCircle.y, this.y + this.height)
+    );
 
-    const isTouchingX = leftSize && rightSize;
-    const isTouchingY = topSize && bottomSize;
-    return isTouchingX && isTouchingY;
+    const distanceX = expRangeCircle.x - closestX;
+    const distanceY = expRangeCircle.y - closestY;
+
+    const distanceSquared = distanceX * distanceX + distanceY * distanceY;
+    const radiusSquared = expRangeCircle.radius * expRangeCircle.radius;
+
+    return distanceSquared <= radiusSquared;
   }
 }
 

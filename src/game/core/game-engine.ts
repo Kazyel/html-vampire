@@ -13,7 +13,7 @@ import GameRenderer from './game-renderer';
 
 const TICK = 1000 / 60;
 
-class GameManager {
+class GameEngine {
   private lastTimestamp: number;
   private deltaTime: number;
   private logicTimer: number;
@@ -77,14 +77,16 @@ class GameManager {
   private handleInput(): void {
     if (this.inputService!.isMouseJustClicked) {
       const { x, y } = this.inputService!.mousePosition;
+
       this.screen.handleInput(this, x, y);
     }
 
     if (this.inputService!.keyJustPressed('Escape')) {
+      if (this.screen.state === ScreenState.POWERUP) {
+        return;
+      }
+
       switch (this.screen.state) {
-        case ScreenState.POWERUP:
-          this.resume();
-          break;
         case ScreenState.PAUSE:
           this.resume();
           break;
@@ -115,7 +117,7 @@ class GameManager {
 
   public initialize(canvas: HTMLCanvasElement): void {
     if (this.renderer || this.inputService) {
-      console.warn('GameManager already initialized.');
+      console.warn('GameEngine already initialized.');
       return;
     }
 
@@ -126,9 +128,10 @@ class GameManager {
   }
   public run() {
     if (!this.renderer || !this.inputService) {
-      console.error('GameManager has not been initialized with a canvas.');
+      console.error('GameEngine has not been initialized with a canvas.');
       return;
     }
+
     this.handleInput();
 
     if (this.screen.state !== ScreenState.GAMEPLAY) {
@@ -140,4 +143,4 @@ class GameManager {
   }
 }
 
-export default GameManager;
+export default GameEngine;

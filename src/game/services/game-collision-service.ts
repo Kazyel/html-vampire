@@ -1,4 +1,4 @@
-import type GameManager from '../core/game-manager';
+import type GameEngine from '../core/game-engine';
 import type Enemy from '../models/entities/enemy';
 import type ExperiencePoint from '../models/entities/experience-point';
 
@@ -19,7 +19,7 @@ import {
  */
 
 class GameCollisionService {
-  public checkEnemyHittingPlayer(ctx: GameManager): void {
+  public checkEnemyHittingPlayer(ctx: GameEngine): void {
     const { player, enemies } = ctx.state;
 
     const spatialGrid = buildSpatialGrid(enemies);
@@ -38,7 +38,7 @@ class GameCollisionService {
     }
   }
 
-  public checkPlayerGetsExperience(ctx: GameManager): void {
+  public checkPlayerGetsExperience(ctx: GameEngine): void {
     const { player, experiencePoints } = ctx.state;
 
     const spatialGrid = buildSpatialGrid(experiencePoints);
@@ -49,7 +49,7 @@ class GameCollisionService {
     );
 
     for (const experiencePoint of potentialExperiencePoints) {
-      const hasCollided = experiencePoint.checkPlayerRange(player);
+      const hasCollided = experiencePoint.checkPlayerExpRange(player);
 
       if (hasCollided) {
         collectExperience(ctx, experiencePoint);
@@ -58,7 +58,7 @@ class GameCollisionService {
     }
   }
 
-  public checkProjectileAndEnemyCollisions(ctx: GameManager): void {
+  public checkProjectileAndEnemyCollisions(ctx: GameEngine): void {
     const { projectiles, enemies } = ctx.state;
 
     const spatialGrid = buildSpatialGrid(enemies);
@@ -86,7 +86,7 @@ class GameCollisionService {
     }
   }
 
-  public checkEnemyCollisions(ctx: GameManager): void {
+  public checkEnemyCollisions(ctx: GameEngine): void {
     const COLLISION_PADDING = 2;
 
     const { enemies } = ctx.state;

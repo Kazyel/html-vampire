@@ -11,7 +11,7 @@ import {
   CANVAS_WIDTH,
 } from '@/constants/dimensions';
 import PowerUpScreen from '../models/screens/power-up-screen';
-import type GameManager from './game-manager';
+import type GameEngine from './game-engine';
 
 class GameScreenManager {
   public objects: CanvasObjectService;
@@ -61,7 +61,7 @@ class GameScreenManager {
   }
 
   public handleInput(
-    game: GameManager,
+    game: GameEngine,
     mouseX: number,
     mouseY: number
   ): boolean {

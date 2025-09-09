@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 
-import GameManager from '@/game/core/game-manager';
+import GameEngine from '@/game/core/game-engine';
 import GameContext from '@/context/game-context';
 
 const GameProvider = ({ children }: { children: React.ReactNode }) => {
-  const game = useRef<GameManager>(new GameManager());
+  const game = useRef<GameEngine>(new GameEngine());
 
   return (
     <GameContext.Provider value={game.current}>{children}</GameContext.Provider>

@@ -1,4 +1,4 @@
-import type GameManager from '@/game/core/game-manager';
+import type GameEngine from '@/game/core/game-engine';
 
 import GameEntityObject from './game-entity-object';
 import ExperiencePoint from './experience-point';
@@ -18,7 +18,7 @@ class Enemy extends GameEntityObject {
     this.health -= damageTaken;
   }
 
-  public attackPlayer(ctx: GameManager) {
+  public attackPlayer(ctx: GameEngine) {
     const { player } = ctx.state;
 
     const dx = player.x - this.x;
@@ -34,7 +34,7 @@ class Enemy extends GameEntityObject {
     this.y += directionY * this.movementSpeed * (ctx.LOGIC_TICK / 1000);
   }
 
-  public onDeathUpdate(ctx: GameManager) {
+  public onDeathUpdate(ctx: GameEngine) {
     this.shouldRemove = true;
     ctx.state.experiencePoints.push(new ExperiencePoint(this.x, this.y));
   }
