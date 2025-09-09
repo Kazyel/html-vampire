@@ -1,5 +1,5 @@
 import type Enemy from './enemy';
-import type GameManager from '@/game/core/game-manager';
+import type GameEngine from '@/game/core/game-engine';
 import type { MovementKeys } from '@/types/inputs';
 
 import Weapon from '../items/weapon';
@@ -10,6 +10,7 @@ import {
   updateProjectiles,
 } from '@/game/utils/attack-manager';
 import Inventory from '../items/inventory';
+import Circle from '../canvas/circle';
 
 const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
@@ -19,12 +20,15 @@ const PLAYER_BASE_XP = 50;
 
 export default class Player extends GameEntityObject {
   public inventory: Inventory;
+  public currentHealth: number;
 
   public level: number;
+
   public totalExp: number;
   public currentExp: number;
   public expToLevelUp: number;
   public expPickupRange: number;
+  public expRangeCircle: Circle;
 
   public damageCooldown: number;
   private hitboxPadding: number;
@@ -32,6 +36,7 @@ export default class Player extends GameEntityObject {
   constructor(x: number, y: number, color: string) {
     super(x, y, color);
 
+    this.currentHealth = DEFAULT_PLAYER_HEALTH;
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
     this.inventory = new Inventory();
@@ -41,9 +46,16 @@ export default class Player extends GameEntityObject {
     );
 
     this.level = 1;
+
+    this.expPickupRange = 150;
+    this.expRangeCircle = new Circle(
+      this.x + this.width / 2,
+      this.y + this.height / 2,
+      this.expPickupRange
+    );
+
     this.totalExp = 0;
     this.currentExp = 0;
-    this.expPickupRange = 150;
     this.expToLevelUp = PLAYER_BASE_XP;
 
     this.hitboxPadding = 3;
@@ -61,7 +73,7 @@ export default class Player extends GameEntityObject {
     this.y += y * (tick / 1000);
   }
 
-  private handleAttack(ctx: GameManager) {
+  private handleAttack(ctx: GameEngine) {
     orchestrateAttack(ctx);
     updateProjectiles(ctx);
   }
@@ -92,18 +104,18 @@ export default class Player extends GameEntityObject {
 
   public takeDamage(damageTaken: number): void {
     if (this.damageCooldown <= 0) {
-      this.health -= damageTaken;
+      this.currentHealth -= damageTaken;
       this.damageCooldown = PLAYER_INVULNERABILITY_TIME;
     }
   }
 
-  public canLevelUp(ctx: GameManager): void {
+  public canLevelUp(ctx: GameEngine): void {
     if (this.level >= PLAYER_MAX_LEVEL) return;
     if (this.currentExp < this.expToLevelUp) return;
 
     this.level++;
 
-    this.currentExp -= this.expToLevelUp;
+    this.currentExp = 0;
     this.expToLevelUp = this.calculateExpToLevelUp();
 
     ctx.events.emitEvent('levelUp');
@@ -141,9 +153,10 @@ export default class Player extends GameEntityObject {
     return nearestEnemy;
   }
 
-  public update(ctx: GameManager, keys: MovementKeys) {
+  public update(ctx: GameEngine, keys: MovementKeys) {
     this.updateDamageCooldown(ctx.LOGIC_TICK);
     this.handleMovement(ctx.LOGIC_TICK, keys);
     this.handleAttack(ctx);
+    this.expRangeCircle.move(this.x + this.width / 2, this.y + this.height / 2);
   }
 }

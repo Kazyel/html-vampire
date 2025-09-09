@@ -1,4 +1,4 @@
-import type GameManager from '../../core/game-manager';
+import type GameEngine from '../../core/game-engine';
 
 import { checkOutsideCamera } from '../../utils/spawn-conditions';
 import Enemy from '../../models/entities/enemy';
@@ -25,7 +25,7 @@ class EnemyWaveService {
     return false;
   }
 
-  public generateWave(ctx: GameManager, enemies: Array<Enemy>): void {
+  public generateWave(ctx: GameEngine, enemies: Array<Enemy>): void {
     for (let i = 0; i < ENEMIES_PER_WAVE; i++) {
       if (enemies.length >= MAX_ENTITY_SPAWN) {
         return;

@@ -1,66 +1,46 @@
-import { useEffect, useState } from 'react';
-import { useGameContext } from '@/context/game-context';
+import useUIState from '@/hooks/use-ui-state';
 
 const GameUI = () => {
-  const ctx = useGameContext();
-
-  const [playerHealth, setPlayerHealth] = useState(ctx.state.player.health);
-  const [playerKills, setPlayerKills] = useState(0);
-  const [playerExperience, setPlayerExperience] = useState(
-    ctx.state.player.totalExp
-  );
-  const [playerLevel, setPlayerLevel] = useState(ctx.state.player.level);
-
-  useEffect(() => {
-    const handleHealthUpdate = () => {
-      setPlayerHealth(ctx.state.player.health);
-    };
-
-    const handleExperienceUpdate = () => {
-      setPlayerExperience(ctx.state.player.totalExp);
-    };
-
-    const handleKillsUpdate = () => {
-      const { player } = ctx.state;
-      let killCounter = 0;
-
-      for (const weapon of player.inventory.weapons) {
-        killCounter += weapon.kills;
-      }
-
-      setPlayerKills(killCounter);
-    };
-
-    const handleLevelUpdate = () => {
-      setPlayerLevel(ctx.state.player.level);
-    };
-
-    ctx.events.on('healthUpdate', handleHealthUpdate);
-    ctx.events.on('killUpdate', handleKillsUpdate);
-    ctx.events.on('experienceUpdate', handleExperienceUpdate);
-    ctx.events.on('levelUp', handleLevelUpdate);
-
-    return () => {
-      ctx.events.off('healthUpdate', handleHealthUpdate);
-      ctx.events.off('experienceUpdate', handleExperienceUpdate);
-      ctx.events.off('killUpdate', handleKillsUpdate);
-      ctx.events.off('levelUp', handleLevelUpdate);
-    };
-  }, [ctx]);
+  const {
+    maxPlayerHealth,
+    currentPlayerHealth,
+    playerKills,
+    neededExperience,
+    currentPlayerExperience,
+    totalPlayerExperience,
+    playerLevel,
+  } = useUIState();
 
   return (
     <div className="flex gap-x-5 flex-1 justify-center items-center">
       <p className="text-white/75 font-bold text-lg">
-        <span className="text-red-600">Health:</span> {playerHealth}
+        <span className="text-red-600">Health:</span> {currentPlayerHealth}{' '}
+        {currentPlayerHealth === maxPlayerHealth
+          ? null
+          : `/ ${maxPlayerHealth}`}
       </p>
       <p className="text-white/75 font-bold text-lg">
         <span className="text-amber-400">Kills:</span> {playerKills}
       </p>
       <p className="text-white/75 font-bold text-lg">
-        <span className="text-emerald-300">Experience:</span> {playerExperience}
+        <span className="text-emerald-300">Experience:</span>{' '}
+        {totalPlayerExperience}
       </p>
-      <p className="text-white/75 font-bold text-lg">
+      <p className="text-white/75 font-bold text-lg relative">
         <span className="text-cyan-400">Level:</span> {playerLevel}
+        <span
+          className="absolute w-full h-[5px] -bottom-2 left-0 text-xs text-white/75"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          }}
+        ></span>
+        <span
+          className="absolute h-[5px] -bottom-2 left-0 text-xs text-white/75"
+          style={{
+            width: `${(currentPlayerExperience / neededExperience) * 100}%`,
+            backgroundColor: 'rgba(255, 255, 255)',
+          }}
+        ></span>
       </p>
     </div>
   );

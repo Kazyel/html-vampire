@@ -1,12 +1,12 @@
 import { ScreenState } from '@/types/state';
 import type GameEventBus from '../core/game-event-bus';
-import type GameManager from '../core/game-manager';
+import type GameEngine from '../core/game-engine';
 
 class UIEventService {
   private eventBus: GameEventBus;
-  private game: GameManager;
+  private game: GameEngine;
 
-  constructor(game: GameManager) {
+  constructor(game: GameEngine) {
     this.eventBus = game.events;
     this.game = game;
   }

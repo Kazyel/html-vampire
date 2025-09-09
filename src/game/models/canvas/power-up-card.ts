@@ -1,7 +1,5 @@
-import type GameManager from '@/game/core/game-manager';
+import type GameEngine from '@/game/core/game-engine';
 import type { PowerUp } from '@/types/power-ups';
-
-import { ScreenState } from '@/types/state';
 
 const FRAME_ASSET = 'flat_frame_default';
 
@@ -33,18 +31,9 @@ class PowerUpCard {
     this.iconSize = iconSize;
   }
 
-  public onClick(game: GameManager, powerUp: PowerUp): void {
-    const { player } = game.state;
-
-    player.inventory.addPowerUp(powerUp);
-    powerUp.applyEffect(player);
-
-    game.screen.state = ScreenState.GAMEPLAY;
-  }
-
   public draw(
     ctx: CanvasRenderingContext2D,
-    game: GameManager,
+    game: GameEngine,
     powerUp: PowerUp
   ): void {
     ctx.imageSmoothingEnabled = false;

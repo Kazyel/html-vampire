@@ -1,5 +1,5 @@
 import type GameRenderer from '@/game/core/game-renderer';
-import type GameManager from '@/game/core/game-manager';
+import type GameEngine from '@/game/core/game-engine';
 import type { PowerUp } from '@/types/power-ups';
 
 import CanvasObjectService from '@/game/services/canvas/canvas-object-service';
@@ -26,7 +26,7 @@ class PowerUpScreen {
     this.clickableCards = [];
   }
 
-  public draw(renderer: GameRenderer, game: GameManager): void {
+  public draw(renderer: GameRenderer, game: GameEngine): void {
     const { ctx } = renderer;
     if (!ctx) return;
 
@@ -86,8 +86,7 @@ class PowerUpScreen {
     }
   }
 
-  public onClick(game: GameManager, mouseX: number, mouseY: number): boolean {
-    console.log('POWER UP CLICKED');
+  public onClick(game: GameEngine, mouseX: number, mouseY: number): boolean {
     for (const card of this.clickableCards) {
       if (
         mouseX > card.x &&
@@ -103,10 +102,10 @@ class PowerUpScreen {
     return false;
   }
 
-  private applyPowerUpEffect(game: GameManager, powerUp: PowerUp): void {
+  private applyPowerUpEffect(game: GameEngine, powerUp: PowerUp): void {
     const { player } = game.state;
     player.inventory.addPowerUp(powerUp);
-    powerUp.applyEffect(player);
+    powerUp.applyEffect(game);
   }
 }
 

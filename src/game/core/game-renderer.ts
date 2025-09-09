@@ -1,4 +1,4 @@
-import type GameManager from './game-manager';
+import type GameEngine from './game-engine';
 
 import { ScreenState } from '@/types/state';
 
@@ -19,7 +19,7 @@ class GameRenderer {
     this.tempCtx = this.tempCanvas.getContext('2d');
   }
 
-  private drawGameplayScreen(gameCtx: GameManager): void {
+  private drawGameplayScreen(gameCtx: GameEngine): void {
     const { tempCtx } = this;
     const { player, enemies, projectiles, experiencePoints, camera } =
       gameCtx.state;
@@ -30,6 +30,7 @@ class GameRenderer {
     tempCtx.translate(-camera.x, -camera.y);
 
     player.drawEntity(tempCtx);
+    player.expRangeCircle.drawStroke(tempCtx);
 
     for (const enemy of enemies) {
       enemy.drawEntity(tempCtx);
@@ -46,7 +47,7 @@ class GameRenderer {
     tempCtx.restore();
   }
 
-  public render(game: GameManager) {
+  public render(game: GameEngine) {
     if (!this.ctx || !this.tempCtx) {
       console.error('Failed to get 2D rendering context.');
       return;

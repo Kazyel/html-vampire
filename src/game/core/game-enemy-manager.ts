@@ -1,4 +1,4 @@
-import type GameManager from './game-manager';
+import type GameEngine from './game-engine';
 
 import EnemyWaveService from '../services/enemy/enemy-wave-service';
 
@@ -9,7 +9,7 @@ class GameEnemyManager {
     this.waveService = new EnemyWaveService();
   }
 
-  public update(ctx: GameManager): void {
+  public update(ctx: GameEngine): void {
     const activeEnemies = ctx.state.enemies;
 
     if (this.waveService.canSpawnWave(ctx.LOGIC_TICK)) {
