@@ -21,9 +21,10 @@ class GameRenderer {
 
   private drawGameplayScreen(gameCtx: GameEngine): void {
     const { tempCtx } = this;
+    if (!tempCtx) return;
+
     const { player, enemies, projectiles, experiencePoints, camera } =
       gameCtx.state;
-    if (!tempCtx) return;
 
     tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
     tempCtx.save();
@@ -37,7 +38,7 @@ class GameRenderer {
     }
 
     for (const experiencePoint of experiencePoints) {
-      experiencePoint.drawEntity(tempCtx);
+      experiencePoint.draw(tempCtx, gameCtx.assets);
     }
 
     for (const projectile of projectiles) {

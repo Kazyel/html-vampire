@@ -1,5 +1,7 @@
 import type Enemy from '../models/entities/enemy';
 import type ExperiencePoint from '../models/entities/experience-point';
+import type GameEntityObject from '../models/entities/game-entity-object';
+import type Player from '../models/entities/player';
 
 export type PossibleEntities = Enemy | ExperiencePoint;
 export type SpatialGrid<T extends PossibleEntities> = Map<string, Array<T>>;
@@ -13,29 +15,28 @@ export const getCellId = (x: number, y: number) => {
 };
 
 export const buildSpatialGrid = <T extends PossibleEntities>(
-  enemies: Array<T>,
+  entities: Array<T>
 ) => {
   const spatialGrid = new Map<string, Array<T>>();
 
-  for (const enemy of enemies) {
-    const cellId = getCellId(enemy.x, enemy.y);
+  for (const entity of entities) {
+    const cellId = getCellId(entity.x, entity.y);
 
     if (!spatialGrid.has(cellId)) {
       spatialGrid.set(cellId, []);
     }
 
-    spatialGrid.get(cellId)!.push(enemy);
+    spatialGrid.get(cellId)!.push(entity);
   }
 
   return spatialGrid;
 };
 
 export const getPotentialColliders = <T extends PossibleEntities>(
-  x: number,
-  y: number,
-  spatialGrid: SpatialGrid<T>,
+  entity: GameEntityObject,
+  spatialGrid: SpatialGrid<T>
 ): Array<T> => {
-  const cellId = getCellId(x, y);
+  const cellId = getCellId(entity.x, entity.y);
 
   const [cellX, cellY] = cellId.split('-').map(Number);
   const potentialColliders: Array<T> = [];
@@ -46,6 +47,35 @@ export const getPotentialColliders = <T extends PossibleEntities>(
 
       if (spatialGrid.has(neighborId)) {
         potentialColliders.push(...spatialGrid.get(neighborId)!);
+      }
+    }
+  }
+
+  return potentialColliders;
+};
+
+export const getPotentialCollidersWithinRange = <T extends PossibleEntities>(
+  player: Player,
+  spatialGrid: SpatialGrid<T>
+): Array<T> => {
+  const minX = player.x - player.expRangeCircle.radius;
+  const maxX = player.x + player.expRangeCircle.radius;
+  const minY = player.y - player.expRangeCircle.radius;
+  const maxY = player.y + player.expRangeCircle.radius;
+
+  const startCellX = Math.floor(minX / CELL_SIZE);
+  const endCellX = Math.floor(maxX / CELL_SIZE);
+  const startCellY = Math.floor(minY / CELL_SIZE);
+  const endCellY = Math.floor(maxY / CELL_SIZE);
+
+  const potentialColliders: Array<T> = [];
+
+  for (let y = startCellY; y <= endCellY; y++) {
+    for (let x = startCellX; x <= endCellX; x++) {
+      const cellId = `${x}-${y}`;
+
+      if (spatialGrid.has(cellId)) {
+        potentialColliders.push(...spatialGrid.get(cellId)!);
       }
     }
   }

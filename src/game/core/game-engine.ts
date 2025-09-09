@@ -123,8 +123,6 @@ class GameEngine {
 
     this.renderer = new GameRenderer(canvas);
     this.inputService = new PlayerInputService(canvas);
-
-    this.renderer.render(this);
   }
   public run() {
     if (!this.renderer || !this.inputService) {

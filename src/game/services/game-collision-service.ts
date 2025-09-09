@@ -9,6 +9,7 @@ import playerTakesDamage from '../events/player-take-damage';
 import {
   buildSpatialGrid,
   getPotentialColliders,
+  getPotentialCollidersWithinRange,
 } from '../utils/spatial-hashing';
 
 /**
@@ -23,11 +24,7 @@ class GameCollisionService {
     const { player, enemies } = ctx.state;
 
     const spatialGrid = buildSpatialGrid(enemies);
-    const potentialEnemies = getPotentialColliders<Enemy>(
-      player.x,
-      player.y,
-      spatialGrid
-    );
+    const potentialEnemies = getPotentialColliders<Enemy>(player, spatialGrid);
 
     for (const enemy of potentialEnemies) {
       const hasCollided = player.checkEnemyCollision(enemy);
@@ -42,11 +39,8 @@ class GameCollisionService {
     const { player, experiencePoints } = ctx.state;
 
     const spatialGrid = buildSpatialGrid(experiencePoints);
-    const potentialExperiencePoints = getPotentialColliders<ExperiencePoint>(
-      player.x,
-      player.y,
-      spatialGrid
-    );
+    const potentialExperiencePoints =
+      getPotentialCollidersWithinRange<ExperiencePoint>(player, spatialGrid);
 
     for (const experiencePoint of potentialExperiencePoints) {
       const hasCollided = experiencePoint.checkPlayerExpRange(player);
@@ -69,8 +63,7 @@ class GameCollisionService {
       }
 
       const potentialEnemies = getPotentialColliders<Enemy>(
-        projectile.x,
-        projectile.y,
+        projectile,
         spatialGrid
       );
 
@@ -93,11 +86,7 @@ class GameCollisionService {
     const spatialGrid = buildSpatialGrid(enemies);
 
     for (const enemy of enemies) {
-      const potentialColliders = getPotentialColliders(
-        enemy.x,
-        enemy.y,
-        spatialGrid
-      );
+      const potentialColliders = getPotentialColliders(enemy, spatialGrid);
 
       for (const otherEnemy of potentialColliders) {
         if (enemy !== otherEnemy) {
