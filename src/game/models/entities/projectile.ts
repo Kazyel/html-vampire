@@ -11,6 +11,7 @@ class Projectile extends GameEntityObject {
   public velocityY: number;
   public shouldRemove: boolean;
   public sourceWeapon: Weapon;
+  public pierceCount: number;
 
   constructor(
     x: number,
@@ -25,6 +26,7 @@ class Projectile extends GameEntityObject {
     this.duration = sourceWeapon.projectileDuration;
     this.speed = sourceWeapon.projectileSpeed;
     this.damage = sourceWeapon.damage;
+    this.pierceCount = sourceWeapon.pierceCount;
 
     this.width = width;
     this.height = height;
@@ -60,17 +62,21 @@ class Projectile extends GameEntityObject {
   }
 
   public draw(canvasCtx: CanvasRenderingContext2D): void {
-    const sprite = this.sourceWeapon.getSprite();
+    const sprite = this.sourceWeapon.getProjectileSprite();
     if (!sprite) return;
 
     const rotationAngle =
       Math.atan2(this.velocityY, this.velocityX) - 1.5 * Math.PI;
+
+    canvasCtx.imageSmoothingEnabled = false;
 
     canvasCtx.save();
     canvasCtx.translate(this.x, this.y);
     canvasCtx.rotate(rotationAngle);
     canvasCtx.drawImage(sprite, -this.width / 2, -this.height / 2);
     canvasCtx.restore();
+
+    canvasCtx.imageSmoothingEnabled = true;
   }
 
   public update(ctx: GameEngine): void {

@@ -60,16 +60,14 @@ class GameScreenManager {
       .draw(ctx);
   }
 
-  public handleInput(
-    game: GameEngine,
-    mouseX: number,
-    mouseY: number
-  ): boolean {
+  public handleInput(game: GameEngine, mouseX: number, mouseY: number): void {
     switch (game.screen.state) {
       case ScreenState.POWERUP:
-        return this.powerUpScreen.onClick(game, mouseX, mouseY);
+        this.powerUpScreen.onClick(game, mouseX, mouseY);
+        this.powerUpScreen.clickableCards = [];
+        break;
       default:
-        return false;
+        break;
     }
   }
 }

@@ -9,11 +9,17 @@ class AssetLoader {
 
   private async load() {
     const assets = [
+      { key: 'flat_frame_default', src: '/assets/ui/flat_frame_default.png' },
       { key: 'bullet', src: '/assets/weapons/bullet.png' },
+      { key: 'experience', src: '/assets/drops/exp.png' },
       { key: 'powerup_0', src: '/assets/powerups/powerup_0.png' },
       { key: 'powerup_1', src: '/assets/powerups/powerup_1.png' },
       { key: 'powerup_2', src: '/assets/powerups/powerup_2.png' },
-      { key: 'flat_frame_default', src: '/assets/ui/flat_frame_default.png' },
+      { key: 'powerup_3', src: '/assets/powerups/powerup_3.png' },
+      { key: 'powerup_4', src: '/assets/powerups/powerup_4.png' },
+      { key: 'powerup_5', src: '/assets/powerups/powerup_5.png' },
+      { key: 'powerup_6', src: '/assets/powerups/powerup_6.png' },
+      { key: 'powerup_7', src: '/assets/powerups/powerup_7.png' },
     ];
 
     await Promise.all(

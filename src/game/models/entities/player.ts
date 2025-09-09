@@ -12,10 +12,10 @@ import {
 import Inventory from '../items/inventory';
 import Circle from '../canvas/circle';
 
-const DEFAULT_PLAYER_HEALTH = 15;
-const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
-const PLAYER_INVULNERABILITY_TIME = 300; // -> milliseconds
 const PLAYER_MAX_LEVEL = 100;
+const DEFAULT_PLAYER_HEALTH = 15;
+const DEFAULT_PLAYER_SPEED = 400;
+const PLAYER_INVULNERABILITY_TIME = 300;
 const PLAYER_BASE_XP = 50;
 
 export default class Player extends GameEntityObject {
@@ -42,7 +42,7 @@ export default class Player extends GameEntityObject {
     this.inventory = new Inventory();
 
     this.inventory.addWeapon(
-      new Weapon('AK-47', 20, '/assets/weapons/bullet.png')
+      new Weapon('AK-47', 30, '/assets/weapons/bullet.png', 0, 300, 4)
     );
 
     this.level = 1;
@@ -157,6 +157,11 @@ export default class Player extends GameEntityObject {
     this.updateDamageCooldown(ctx.LOGIC_TICK);
     this.handleMovement(ctx.LOGIC_TICK, keys);
     this.handleAttack(ctx);
-    this.expRangeCircle.move(this.x + this.width / 2, this.y + this.height / 2);
+
+    this.expRangeCircle.update(
+      this.x + this.width / 2,
+      this.y + this.height / 2,
+      this.expPickupRange
+    );
   }
 }

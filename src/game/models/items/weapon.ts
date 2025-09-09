@@ -3,9 +3,10 @@ import type GameEngine from '../../core/game-engine';
 
 import Projectile from '../entities/projectile';
 
-const DEFAULT_ATTACK_SPEED = 600; // -> milliseconds
-const DEFAULT_PROJECTILE_SPEED = 1000; // -> milliseconds
-const DEFAULT_PROJECTILE_DURATION = 2000; // -> milliseconds
+const DEFAULT_ATTACK_SPEED = 600;
+const DEFAULT_PROJECTILE_SPEED = 1000;
+const DEFAULT_PROJECTILE_DURATION = 2000;
+const DEFAULT_PIERCE_COUNT = 1;
 
 class Weapon {
   private attackTimer: number;
@@ -13,6 +14,7 @@ class Weapon {
 
   public name: string;
   public damage: number;
+  public pierceCount: number;
   public projectileSpeed: number;
   public projectileDuration: number;
   public attackSpeed: number;
@@ -23,6 +25,8 @@ class Weapon {
     damage: number,
     asset: string,
     attackOffset: number = 0,
+    attackSpeed: number = DEFAULT_ATTACK_SPEED,
+    pierceCount: number = DEFAULT_PIERCE_COUNT,
     projectileSpeed: number = DEFAULT_PROJECTILE_SPEED,
     projectileDuration: number = DEFAULT_PROJECTILE_DURATION
   ) {
@@ -30,9 +34,10 @@ class Weapon {
     this.damage = damage;
     this.projectileSpeed = projectileSpeed;
     this.projectileDuration = projectileDuration;
+    this.pierceCount = pierceCount;
     this.kills = 0;
 
-    this.attackSpeed = DEFAULT_ATTACK_SPEED;
+    this.attackSpeed = attackSpeed;
     this.attackTimer = -attackOffset;
 
     this.sprite = null;
@@ -60,8 +65,8 @@ class Weapon {
       const dx = nearestEnemy.x - player.x;
       const dy = nearestEnemy.y - player.y;
 
-      const projectileWidth = this.getSprite()?.width || 0;
-      const projectileHeight = this.getSprite()?.height || 0;
+      const projectileWidth = this.getProjectileSprite()?.width || 0;
+      const projectileHeight = this.getProjectileSprite()?.height || 0;
 
       const length = Math.hypot(dx, dy);
       if (length < 1e-8) return;
@@ -84,7 +89,7 @@ class Weapon {
     }
   }
 
-  public getSprite(): HTMLImageElement | null {
+  public getProjectileSprite(): HTMLImageElement | null {
     if (this.sprite && this.sprite.complete) {
       return this.sprite;
     }

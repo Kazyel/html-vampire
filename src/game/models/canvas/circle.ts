@@ -9,7 +9,8 @@ class Circle {
     this.radius = radius;
   }
 
-  public move(x: number, y: number): void {
+  public update(x: number, y: number, radius: number): void {
+    this.radius = radius;
     this.x = x;
     this.y = y;
   }

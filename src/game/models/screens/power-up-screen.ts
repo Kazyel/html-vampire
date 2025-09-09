@@ -19,7 +19,7 @@ type ClickableCards = {
 
 class PowerUpScreen {
   private objects: CanvasObjectService;
-  private clickableCards: Array<ClickableCards>;
+  public clickableCards: Array<ClickableCards>;
 
   constructor() {
     this.objects = new CanvasObjectService();

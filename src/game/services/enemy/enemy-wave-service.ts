@@ -3,9 +3,9 @@ import type GameEngine from '../../core/game-engine';
 import { checkOutsideCamera } from '../../utils/spawn-conditions';
 import Enemy from '../../models/entities/enemy';
 
-const MAX_ENTITY_SPAWN = 25;
-const ENEMIES_PER_WAVE = 5;
-const DEFAULT_SPAWN_RATE = 2000; // -> milliseconds
+const MAX_ENTITY_SPAWN = 75;
+const ENEMIES_PER_WAVE = 15;
+const DEFAULT_SPAWN_RATE = 1500;
 
 class EnemyWaveService {
   public spawnRate: number;
