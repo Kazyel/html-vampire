@@ -8,3 +8,8 @@ export type MovementKeys = {
 export type BasicKeys = {
   Escape: boolean;
 };
+
+export type MouseInput = {
+  x: number;
+  y: number;
+};

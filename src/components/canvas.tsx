@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useGameContext } from '@/context/game-context';
 
-import GameRenderer from '@/game/core/game-renderer';
 import UIEventService from '@/game/services/ui-event-service';
 
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
@@ -14,14 +13,14 @@ const Canvas = () => {
   useEffect(() => {
     if (!canvasRef.current || !game) return;
 
-    const screen = new GameRenderer(canvasRef.current!);
+    game.initialize(canvasRef.current);
     const uiEvents = new UIEventService(game);
 
     game.assets.whenReady().then(() => {
       const gameLoop = (timestamp: number) => {
         game.updateTime(timestamp);
         game.run();
-        screen.render(game);
+        game.renderer?.render(game);
 
         uiEvents.init();
 

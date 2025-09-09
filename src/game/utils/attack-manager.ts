@@ -11,10 +11,10 @@ export const orchestrateAttack = (ctx: GameManager) => {
     camera.x,
     camera.y,
     CANVAS_WIDTH,
-    CANVAS_HEIGHT,
+    CANVAS_HEIGHT
   );
 
-  for (const weapon of player.weapons) {
+  for (const weapon of player.inventory.weapons) {
     if (weapon.canAttack(ctx.LOGIC_TICK)) {
       const nearestEnemy = player.findNearestEnemy(visibleEnemies);
 

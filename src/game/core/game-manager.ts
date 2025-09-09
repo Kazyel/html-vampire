@@ -1,4 +1,4 @@
-import type AssetLoader from './asset-loader';
+import AssetLoader from './asset-loader';
 
 import GameEventBus from './game-event-bus';
 import GameDataState from './game-data-state';
@@ -9,11 +9,11 @@ import PowerUpManager from './power-up-manager';
 import initEntityCleaner from '../utils/entity-cleaner';
 
 import { ScreenState } from '@/types/state';
+import GameRenderer from './game-renderer';
 
 const TICK = 1000 / 60;
 
 class GameManager {
-  private inputService: PlayerInputService;
   private lastTimestamp: number;
   private deltaTime: number;
   private logicTimer: number;
@@ -26,27 +26,30 @@ class GameManager {
   public powerUps: PowerUpManager;
   public assets: AssetLoader;
 
-  constructor(assets: AssetLoader) {
-    this.events = new GameEventBus();
-    this.inputService = new PlayerInputService();
-    this.state = new GameDataState();
+  public renderer: GameRenderer | null;
+  private inputService: PlayerInputService | null;
 
+  constructor() {
+    this.events = new GameEventBus();
+    this.state = new GameDataState();
     this.enemy = new GameEnemyManager();
     this.screen = new GameScreenManager();
     this.powerUps = new PowerUpManager();
-
-    this.assets = assets;
 
     this.LOGIC_TICK = TICK;
     this.deltaTime = 0;
     this.logicTimer = 0;
     this.lastTimestamp = 0;
+
+    this.assets = new AssetLoader();
+    this.renderer = null;
+    this.inputService = null;
   }
 
   private updateGame() {
     const { inputService, state, enemy } = this;
     const { player, camera, collisions } = state;
-    const { movementKeys } = inputService;
+    const { movementKeys } = inputService!;
 
     player.update(this, movementKeys);
     camera.update(player.x, player.y);
@@ -68,7 +71,29 @@ class GameManager {
       this.logicTimer -= this.LOGIC_TICK;
     }
 
-    this.inputService.clearFrameState();
+    this.inputService!.clearFrameState();
+  }
+
+  private handleInput(): void {
+    if (this.inputService!.isMouseJustClicked) {
+      const { x, y } = this.inputService!.mousePosition;
+      this.screen.handleInput(this, x, y);
+    }
+
+    if (this.inputService!.keyJustPressed('Escape')) {
+      switch (this.screen.state) {
+        case ScreenState.POWERUP:
+          this.resume();
+          break;
+        case ScreenState.PAUSE:
+          this.resume();
+          break;
+        case ScreenState.GAMEPLAY:
+        default:
+          this.pause(ScreenState.PAUSE);
+          break;
+      }
+    }
   }
 
   public updateTime(currentTimestamp: number) {
@@ -88,21 +113,23 @@ class GameManager {
     this.screen.state = ScreenState.GAMEPLAY;
   }
 
-  public run() {
-    if (this.inputService.keyJustPressed('Escape')) {
-      switch (this.screen.state) {
-        case ScreenState.POWERUP:
-          this.resume();
-          break;
-        case ScreenState.PAUSE:
-          this.resume();
-          break;
-        case ScreenState.GAMEPLAY:
-        default:
-          this.pause(ScreenState.PAUSE);
-          break;
-      }
+  public initialize(canvas: HTMLCanvasElement): void {
+    if (this.renderer || this.inputService) {
+      console.warn('GameManager already initialized.');
+      return;
     }
+
+    this.renderer = new GameRenderer(canvas);
+    this.inputService = new PlayerInputService(canvas);
+
+    this.renderer.render(this);
+  }
+  public run() {
+    if (!this.renderer || !this.inputService) {
+      console.error('GameManager has not been initialized with a canvas.');
+      return;
+    }
+    this.handleInput();
 
     if (this.screen.state !== ScreenState.GAMEPLAY) {
       this.inputService.clearFrameState();

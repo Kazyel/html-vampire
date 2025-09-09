@@ -1,6 +1,6 @@
 import type Enemy from './enemy';
 import type GameManager from '@/game/core/game-manager';
-import type { MovementKeys } from '@/types/keyboard';
+import type { MovementKeys } from '@/types/inputs';
 
 import Weapon from '../items/weapon';
 import GameEntityObject from './game-entity-object';
@@ -9,6 +9,7 @@ import {
   orchestrateAttack,
   updateProjectiles,
 } from '@/game/utils/attack-manager';
+import Inventory from '../items/inventory';
 
 const DEFAULT_PLAYER_HEALTH = 15;
 const DEFAULT_PLAYER_SPEED = 400; // -> pixels * ((tick) / 1000)
@@ -17,7 +18,7 @@ const PLAYER_MAX_LEVEL = 100;
 const PLAYER_BASE_XP = 50;
 
 export default class Player extends GameEntityObject {
-  public weapons: Array<Weapon>;
+  public inventory: Inventory;
 
   public level: number;
   public totalExp: number;
@@ -33,7 +34,11 @@ export default class Player extends GameEntityObject {
 
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
-    this.weapons = [new Weapon('AK-47', 20, '/assets/weapons/bullet.png')];
+    this.inventory = new Inventory();
+
+    this.inventory.addWeapon(
+      new Weapon('AK-47', 20, '/assets/weapons/bullet.png')
+    );
 
     this.level = 1;
     this.totalExp = 0;

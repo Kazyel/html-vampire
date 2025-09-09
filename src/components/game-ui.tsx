@@ -24,7 +24,7 @@ const GameUI = () => {
       const { player } = ctx.state;
       let killCounter = 0;
 
-      for (const weapon of player.weapons) {
+      for (const weapon of player.inventory.weapons) {
         killCounter += weapon.kills;
       }
 

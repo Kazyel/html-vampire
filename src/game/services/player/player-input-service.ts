@@ -1,24 +1,53 @@
-import type { BasicKeys, MovementKeys } from '@/types/keyboard';
+import type { BasicKeys, MouseInput, MovementKeys } from '@/types/inputs';
 
 class PlayerInputService {
-  public movementKeys: MovementKeys = {
-    ArrowDown: false,
-    ArrowLeft: false,
-    ArrowRight: false,
-    ArrowUp: false,
-  };
-
-  public basicKeys: BasicKeys = {
-    Escape: false,
-  };
-
   private justPressed: Set<string> = new Set();
+  private canvas: HTMLCanvasElement;
 
-  constructor() {
-    this.initMovementKeys();
+  public movementKeys: MovementKeys;
+  public basicKeys: BasicKeys;
+
+  public mousePosition: MouseInput;
+  public isMouseJustClicked: boolean;
+
+  constructor(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+    this.isMouseJustClicked = false;
+
+    this.movementKeys = {
+      ArrowDown: false,
+      ArrowLeft: false,
+      ArrowRight: false,
+      ArrowUp: false,
+    };
+
+    this.basicKeys = {
+      Escape: false,
+    };
+    this.mousePosition = { x: 0, y: 0 };
+
+    this.initKeyboard();
+    this.initMouse();
   }
 
-  private initMovementKeys() {
+  private initMouse() {
+    if (!this.canvas) {
+      console.warn("Canvas not found, mouse input won't work");
+      return;
+    }
+
+    this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = this.canvas!.getBoundingClientRect();
+      this.mousePosition.x = e.clientX - rect.left;
+      this.mousePosition.y = e.clientY - rect.top;
+    });
+
+    this.canvas.addEventListener('mousedown', () => {
+      this.isMouseJustClicked = true;
+    });
+  }
+
+  private initKeyboard() {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       if (
         e.key in this.movementKeys &&
@@ -51,6 +80,7 @@ class PlayerInputService {
   }
 
   public clearFrameState() {
+    this.isMouseJustClicked = false;
     this.justPressed.clear();
   }
 }
