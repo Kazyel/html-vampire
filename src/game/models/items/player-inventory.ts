@@ -1,7 +1,7 @@
-import type { PowerUp } from '@/types/power-ups';
+import type { PowerUp } from '@/types/drops';
 import type Weapon from './weapon';
 
-class Inventory {
+class PlayerInventory {
   public weapons: Array<Weapon>;
   public powerUps: Map<
     string,
@@ -17,6 +17,12 @@ class Inventory {
   }
 
   public addWeapon(weapon: Weapon): void {
+    const offsetValue = 100;
+    const newWeaponIndex = this.weapons.length;
+    const attackTimerOffset = newWeaponIndex * offsetValue;
+
+    weapon.attackTimer = -attackTimerOffset;
+
     this.weapons.push(weapon);
   }
 
@@ -36,4 +42,4 @@ class Inventory {
   }
 }
 
-export default Inventory;
+export default PlayerInventory;

@@ -1,4 +1,4 @@
-import type { PowerUp } from '@/types/power-ups';
+import type { PowerUp } from '@/types/drops';
 
 import { POWER_UPS } from '@/constants/power-ups';
 

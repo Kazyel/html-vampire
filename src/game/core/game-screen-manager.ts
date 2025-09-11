@@ -1,6 +1,9 @@
 import type GameRenderer from '@/game/core/game-renderer';
+import type GameEngine from './game-engine';
 
 import CanvasObjectService from '../services/canvas/canvas-object-service';
+import LevelUpScreen from '../models/screens/level-up-screen';
+import WeaponDropScreen from '../models/screens/weapon-drop-screen';
 
 import { blurBackground } from '../utils/screen-filters';
 import { ScreenState } from '@/types/state';
@@ -10,19 +13,19 @@ import {
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
 } from '@/constants/dimensions';
-import PowerUpScreen from '../models/screens/power-up-screen';
-import type GameEngine from './game-engine';
 
 class GameScreenManager {
   public objects: CanvasObjectService;
   public state: ScreenState;
-  public powerUpScreen: PowerUpScreen;
+  public levelUpScreen: LevelUpScreen;
+  public weaponDropScreen: WeaponDropScreen;
 
   constructor() {
     this.objects = new CanvasObjectService();
     this.state = ScreenState.GAMEPLAY;
 
-    this.powerUpScreen = new PowerUpScreen();
+    this.levelUpScreen = new LevelUpScreen();
+    this.weaponDropScreen = new WeaponDropScreen();
   }
 
   public drawPauseScreen(renderer: GameRenderer): void {
@@ -62,9 +65,8 @@ class GameScreenManager {
 
   public handleInput(game: GameEngine, mouseX: number, mouseY: number): void {
     switch (game.screen.state) {
-      case ScreenState.POWERUP:
-        this.powerUpScreen.onClick(game, mouseX, mouseY);
-        this.powerUpScreen.clickableCards = [];
+      case ScreenState.LEVELUP:
+        this.levelUpScreen.onClick(game, mouseX, mouseY);
         break;
       default:
         break;

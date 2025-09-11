@@ -1,19 +1,20 @@
 import type GameEngine from '@/game/core/game-engine';
-import type Enemy from '@/game/models/entities/enemy';
 import type Projectile from '@/game/models/entities/projectile';
+import type SmallEnemy from '@/game/models/entities/enemies/small-enemy';
 
-const killEnemy = (enemy: Enemy, projectile: Projectile, ctx: GameEngine) => {
-  if (!projectile.sourceWeapon) {
+import RareEnemy from '@/game/models/entities/enemies/rare-enemy';
+
+const killEnemy = (
+  enemy: SmallEnemy | RareEnemy,
+  projectile: Projectile,
+  ctx: GameEngine
+) => {
+  if (!projectile.sourceWeapon || projectile.hitEnemies.has(enemy)) {
     return;
   }
-
-  if (projectile.hitEnemies.has(enemy)) {
-    return;
-  }
-
-  projectile.hitEnemies.add(enemy);
 
   enemy.takeDamage(projectile.damage);
+  projectile.hitEnemies.add(enemy);
   projectile.pierceCount--;
 
   if (projectile.pierceCount <= 0) {
@@ -23,9 +24,13 @@ const killEnemy = (enemy: Enemy, projectile: Projectile, ctx: GameEngine) => {
   if (enemy.health <= 0) {
     projectile.sourceWeapon.kills++;
     enemy.onDeathUpdate(ctx);
+
+    if (enemy instanceof RareEnemy) {
+      enemy.dropRareItem(ctx);
+    }
+
     ctx.events.emitEvent('killUpdate');
   }
-  return;
 };
 
 export default killEnemy;

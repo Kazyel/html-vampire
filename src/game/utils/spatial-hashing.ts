@@ -2,8 +2,9 @@ import type Enemy from '../models/entities/enemy';
 import type ExperiencePoint from '../models/entities/drops/experience-point';
 import type GameEntityObject from '../models/entities/game-entity-object';
 import type Player from '../models/entities/player';
+import type Chest from '../models/entities/drops/chest';
 
-export type PossibleEntities = Enemy | ExperiencePoint;
+export type PossibleEntities = Enemy | ExperiencePoint | Chest;
 export type SpatialGrid<T extends PossibleEntities> = Map<string, Array<T>>;
 
 const CELL_SIZE = 100;

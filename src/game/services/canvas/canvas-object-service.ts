@@ -1,5 +1,5 @@
-import Rectangle from '@/game/models/canvas/rectangle';
-import Text from '@/game/models/canvas/text';
+import Rectangle from '@/game/models/canvas/shapes/rectangle';
+import Text from '@/game/models/canvas/shapes/text';
 
 /**
  * TODO:
