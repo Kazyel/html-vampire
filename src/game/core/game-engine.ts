@@ -5,7 +5,7 @@ import GameDataState from './game-data-state';
 import GameEnemyManager from './game-enemy-manager';
 import GameScreenManager from './game-screen-manager';
 import PlayerInputService from '../services/player/player-input-service';
-import PowerUpManager from './power-up-manager';
+import PowerUpManager from './cards-manager';
 import initEntityCleaner from '../utils/entity-cleaner';
 
 import { ScreenState } from '@/types/state';
@@ -58,7 +58,7 @@ class GameEngine {
     collisions.checkProjectileAndEnemyCollisions(this);
     collisions.checkEnemyCollisions(this);
     collisions.checkEnemyHittingPlayer(this);
-    collisions.checkPlayerGetsExperience(this);
+    collisions.checkPlayerGetsDrops(this);
 
     initEntityCleaner(this);
   }
@@ -82,7 +82,7 @@ class GameEngine {
     }
 
     if (this.inputService!.keyJustPressed('Escape')) {
-      if (this.screen.state === ScreenState.POWERUP) {
+      if (this.screen.state === ScreenState.LEVELUP) {
         return;
       }
 
@@ -106,7 +106,7 @@ class GameEngine {
   public pause(screen: ScreenState) {
     this.screen.state = screen;
 
-    if (screen === ScreenState.POWERUP) {
+    if (screen === ScreenState.LEVELUP) {
       this.powerUps.selectPowerUpCards();
     }
   }
@@ -124,6 +124,7 @@ class GameEngine {
     this.renderer = new GameRenderer(canvas);
     this.inputService = new PlayerInputService(canvas);
   }
+
   public run() {
     if (!this.renderer || !this.inputService) {
       console.error('GameEngine has not been initialized with a canvas.');

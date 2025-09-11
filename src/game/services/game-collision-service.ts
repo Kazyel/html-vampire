@@ -1,10 +1,12 @@
 import type GameEngine from '../core/game-engine';
 import type Enemy from '../models/entities/enemy';
 import type ExperiencePoint from '../models/entities/drops/experience-point';
+import type Chest from '../models/entities/drops/chest';
 
 import collectExperience from '../events/collect-experience';
 import killEnemy from '../events/kill-enemy';
 import playerTakesDamage from '../events/player-take-damage';
+import collectChest from '../events/collect-chest';
 
 import {
   buildSpatialGrid,
@@ -27,7 +29,11 @@ class GameCollisionService {
     const potentialEnemies = getPotentialColliders<Enemy>(player, spatialGrid);
 
     for (const enemy of potentialEnemies) {
-      const hasCollided = player.checkEnemyCollision(enemy);
+      if (enemy.shouldRemove) {
+        continue;
+      }
+
+      const hasCollided = player.checkCollision(enemy);
 
       if (hasCollided && player.damageCooldown <= 0) {
         playerTakesDamage(player, enemy, ctx);
@@ -35,18 +41,39 @@ class GameCollisionService {
     }
   }
 
-  public checkPlayerGetsExperience(ctx: GameEngine): void {
-    const { player, experiencePoints } = ctx.state;
+  public checkPlayerGetsDrops(ctx: GameEngine): void {
+    const { player, experiencePoints, chests } = ctx.state;
 
-    const spatialGrid = buildSpatialGrid(experiencePoints);
+    const expGrid = buildSpatialGrid(experiencePoints);
+    const chestGrid = buildSpatialGrid(chests);
+
     const potentialExperiencePoints =
-      getPotentialCollidersWithinRange<ExperiencePoint>(player, spatialGrid);
+      getPotentialCollidersWithinRange<ExperiencePoint>(player, expGrid);
+
+    const potentialChests = getPotentialColliders<Chest>(player, chestGrid);
 
     for (const experiencePoint of potentialExperiencePoints) {
+      if (experiencePoint.shouldRemove) {
+        continue;
+      }
+
       const hasCollided = experiencePoint.checkPlayerExpRange(player);
 
       if (hasCollided) {
         collectExperience(ctx, experiencePoint);
+        return;
+      }
+    }
+
+    for (const chest of potentialChests) {
+      if (chest.shouldRemove) {
+        continue;
+      }
+
+      const hasCollided = player.checkCollision(chest);
+
+      if (hasCollided) {
+        collectChest(ctx, chest);
         return;
       }
     }

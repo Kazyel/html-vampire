@@ -5,8 +5,8 @@ import type { MovementKeys } from '@/types/inputs';
 import Weapon from '../items/weapon';
 import GameEntityObject from './game-entity-object';
 import checkMapBounds from '@/game/utils/check-map-bounds';
-import Inventory from '../items/inventory';
-import Circle from '../canvas/circle';
+import PlayerInventory from '../items/player-inventory';
+import Circle from '../canvas/shapes/circle';
 
 import {
   orchestrateAttack,
@@ -33,7 +33,7 @@ export default class Player extends GameEntityObject {
 
   private hitboxPadding: number;
   public damageCooldown: number;
-  public inventory: Inventory;
+  public inventory: PlayerInventory;
 
   constructor(x: number, y: number, color: string) {
     super(x, y, color);
@@ -41,10 +41,10 @@ export default class Player extends GameEntityObject {
     this.currentHealth = DEFAULT_PLAYER_HEALTH;
     this.health = DEFAULT_PLAYER_HEALTH;
     this.movementSpeed = DEFAULT_PLAYER_SPEED;
-    this.inventory = new Inventory();
+    this.inventory = new PlayerInventory();
 
     this.inventory.addWeapon(
-      new Weapon('AK-47', 30, '/assets/weapons/bullet.png', 0, 300, 4)
+      new Weapon('AK-47', 30, '/assets/weapons/bullet.png', 300, 4)
     );
 
     this.level = 1;
@@ -82,10 +82,10 @@ export default class Player extends GameEntityObject {
 
   private handleMovement(tick: number, keys: MovementKeys) {
     checkMapBounds(this);
-    if (keys.ArrowDown) this.walk(0, this.movementSpeed, tick);
-    if (keys.ArrowUp) this.walk(0, -this.movementSpeed, tick);
-    if (keys.ArrowLeft) this.walk(-this.movementSpeed, 0, tick);
-    if (keys.ArrowRight) this.walk(this.movementSpeed, 0, tick);
+    if (keys.w) this.walk(0, -this.movementSpeed, tick);
+    if (keys.a) this.walk(-this.movementSpeed, 0, tick);
+    if (keys.s) this.walk(0, this.movementSpeed, tick);
+    if (keys.d) this.walk(this.movementSpeed, 0, tick);
   }
 
   private calculateExpToLevelUp() {
@@ -124,8 +124,8 @@ export default class Player extends GameEntityObject {
     ctx.events.emitEvent('experienceUpdate');
   }
 
-  public checkEnemyCollision(enemy: GameEntityObject) {
-    const { x, y, width, height } = enemy;
+  public checkCollision(entity: GameEntityObject) {
+    const { x, y, width, height } = entity;
 
     const leftSide = this.x + this.hitboxPadding < x + width;
     const rightSide = this.x + this.width - this.hitboxPadding > x;

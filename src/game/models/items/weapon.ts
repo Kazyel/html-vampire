@@ -9,22 +9,21 @@ const DEFAULT_PROJECTILE_DURATION = 2000;
 const DEFAULT_PIERCE_COUNT = 1;
 
 class Weapon {
-  private attackTimer: number;
   private sprite: HTMLImageElement | null;
 
   public name: string;
+  public kills: number;
   public damage: number;
   public pierceCount: number;
   public projectileSpeed: number;
   public projectileDuration: number;
   public attackSpeed: number;
-  public kills: number;
+  public attackTimer: number;
 
   constructor(
     name: string,
     damage: number,
-    asset: string,
-    attackOffset: number = 0,
+    projectileAsset: string,
     attackSpeed: number = DEFAULT_ATTACK_SPEED,
     pierceCount: number = DEFAULT_PIERCE_COUNT,
     projectileSpeed: number = DEFAULT_PROJECTILE_SPEED,
@@ -38,15 +37,15 @@ class Weapon {
     this.kills = 0;
 
     this.attackSpeed = attackSpeed;
-    this.attackTimer = -attackOffset;
+    this.attackTimer = 0;
 
     this.sprite = null;
-    this.loadImage(asset);
+    this.loadImage(projectileAsset);
   }
 
-  private loadImage(asset: string) {
+  private loadImage(projectileAsset: string) {
     this.sprite = new Image();
-    this.sprite.src = asset;
+    this.sprite.src = projectileAsset;
   }
 
   public canAttack(tick: number): boolean {

@@ -1,7 +1,7 @@
 import Enemy from '../enemy';
 
 const DEFAULT_COLOR = '#0022bb';
-const DEFAULT_EXPERIENCE_DROP_VALUE = 10;
+const DEFAULT_EXPERIENCE_DROP_VALUE = 50;
 const DEFAULT_HEALTH = 15;
 const DEFAULT_DAMAGE = 1;
 const DEFAULT_MOVEMENT_SPEED = 50;

@@ -15,15 +15,16 @@ class PlayerInputService {
     this.isMouseJustClicked = false;
 
     this.movementKeys = {
-      ArrowDown: false,
-      ArrowLeft: false,
-      ArrowRight: false,
-      ArrowUp: false,
+      w: false,
+      a: false,
+      s: false,
+      d: false,
     };
 
     this.basicKeys = {
       Escape: false,
     };
+
     this.mousePosition = { x: 0, y: 0 };
 
     this.initKeyboard();
@@ -56,6 +57,7 @@ class PlayerInputService {
         this.movementKeys[e.key as keyof MovementKeys] = true;
         this.justPressed.add(e.key);
       }
+
       if (
         e.key in this.basicKeys &&
         !this.basicKeys[e.key as keyof BasicKeys]
@@ -64,6 +66,7 @@ class PlayerInputService {
         this.justPressed.add(e.key);
       }
     });
+
     window.addEventListener('keyup', (e: KeyboardEvent) => {
       if (e.key in this.movementKeys) {
         this.movementKeys[e.key as keyof MovementKeys] = false;

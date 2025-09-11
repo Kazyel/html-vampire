@@ -65,8 +65,8 @@ class GameRenderer {
       case ScreenState.PAUSE:
         game.screen.drawPauseScreen(this);
         break;
-      case ScreenState.POWERUP:
-        game.screen.powerUpScreen.draw(this, game);
+      case ScreenState.LEVELUP:
+        game.screen.levelUpScreen.draw(this, game);
         break;
       case ScreenState.GAMEPLAY:
       default:

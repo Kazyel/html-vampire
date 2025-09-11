@@ -1,10 +1,9 @@
 import type GameEngine from '@/game/core/game-engine';
 
 import Enemy from '../enemy';
-import ExperiencePoint from '../drops/experience-point';
 import Chest from '../drops/chest';
 
-import { EXPERIENCE_SIZE, NORMAL_CHEST_SIZE } from '@/constants/dimensions';
+import { NORMAL_CHEST_SIZE } from '@/constants/dimensions';
 
 const DEFAULT_COLOR = '#ff0000cc';
 const DEFAULT_EXPERIENCE_DROP_VALUE = 150;
@@ -29,18 +28,12 @@ class RareEnemy extends Enemy {
     super.growEntity(20, 20);
   }
 
-  public onDeathUpdate(ctx: GameEngine) {
-    this.shouldRemove = true;
+  public dropRareItem(ctx: GameEngine) {
+    const entityMiddleX = this.x + this.width / 2;
+    const entityMiddleY = this.y + this.height / 2;
 
-    const chestSpawnX = this.x + this.width / 2 - NORMAL_CHEST_SIZE / 2;
-    const chestSpawnY = this.y + this.height / 2 - NORMAL_CHEST_SIZE / 2;
-
-    const expSpawnX = this.x + this.width / 2 - EXPERIENCE_SIZE / 2;
-    const expSpawnY = this.y + this.height / 2 - EXPERIENCE_SIZE / 2;
-
-    new ExperiencePoint(expSpawnX, expSpawnY, this.experienceDropValue).spawn(
-      ctx
-    );
+    const chestSpawnX = entityMiddleX - NORMAL_CHEST_SIZE / 2;
+    const chestSpawnY = entityMiddleY - NORMAL_CHEST_SIZE / 2;
 
     new Chest(chestSpawnX, chestSpawnY).spawn(ctx);
   }

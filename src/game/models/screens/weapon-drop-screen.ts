@@ -1,15 +1,15 @@
 import type GameRenderer from '@/game/core/game-renderer';
 import type GameEngine from '@/game/core/game-engine';
-import type { PowerUp } from '@/types/power-ups';
+import type { PowerUp } from '@/types/drops';
 
 import CanvasObjectService from '@/game/services/canvas/canvas-object-service';
-import PowerUpCard from '../canvas/power-up-card';
+import PowerUpCard from '../canvas/cards/power-up-card';
 
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '@/constants/dimensions';
 import { blurBackground } from '@/game/utils/screen-filters';
 import { ScreenState } from '@/types/state';
 
-type ClickableCards = {
+type ClickableCard = {
   powerUp: PowerUp;
   x: number;
   y: number;
@@ -17,26 +17,22 @@ type ClickableCards = {
   height: number;
 };
 
-class PowerUpScreen {
+class WeaponDropScreen {
   private objects: CanvasObjectService;
-  public clickableCards: Array<ClickableCards>;
+  public clickableCards: Array<ClickableCard>;
 
   constructor() {
     this.objects = new CanvasObjectService();
     this.clickableCards = [];
   }
 
-  public draw(renderer: GameRenderer, game: GameEngine): void {
-    const { ctx } = renderer;
-    if (!ctx) return;
+  public createCards(game: GameEngine): void {
+    this.clickableCards = [];
 
-    const titleSize = CANVAS_HEIGHT * 0.06;
     const cardWidth = CANVAS_WIDTH * 0.22;
     const cardHeight = CANVAS_HEIGHT * 0.46;
     const cardSpacing = cardWidth * 0.3;
     const centerX = CANVAS_WIDTH / 2;
-    const centerY = CANVAS_HEIGHT / 2;
-
     const powerUpCards = game.powerUps.currentPowerCards;
 
     const totalWidth =
@@ -44,27 +40,10 @@ class PowerUpScreen {
 
     const startX = centerX - totalWidth / 2;
 
-    blurBackground(renderer, 10);
-
-    this.objects
-      .createText(
-        centerX,
-        centerY / 2 - 64,
-        'YOU LEVELED UP!',
-        '#ffffff',
-        titleSize
-      )
-      .draw(ctx);
-
     for (let i = 0; i < powerUpCards.length; i++) {
       const powerUpCard = powerUpCards[i];
-
       const cardX = startX + i * (cardWidth + cardSpacing);
-      const cardY = centerY - cardHeight / 2;
-
-      const iconSize = Math.min(cardWidth, cardHeight) * 0.35;
-      const iconX = cardX + cardWidth / 2 - iconSize / 2;
-      const iconY = cardY + cardHeight / 2 - iconSize / 2 - 32;
+      const cardY = CANVAS_HEIGHT / 2 - cardHeight / 2;
 
       this.clickableCards.push({
         powerUp: powerUpCard,
@@ -73,16 +52,37 @@ class PowerUpScreen {
         width: cardWidth,
         height: cardHeight,
       });
+    }
+  }
 
+  public draw(renderer: GameRenderer, game: GameEngine): void {
+    const { ctx } = renderer;
+    if (!ctx) return;
+
+    const titleSize = CANVAS_HEIGHT * 0.06;
+    const centerX = CANVAS_WIDTH / 2;
+    const centerY = CANVAS_HEIGHT / 2;
+
+    blurBackground(renderer, 10);
+
+    this.objects
+      .createText(
+        centerX,
+        centerY / 2 - 64,
+        'SELECT A NEW WEAPON!',
+        '#ffffff',
+        titleSize
+      )
+      .draw(ctx);
+
+    for (const card of this.clickableCards) {
       new PowerUpCard(
-        cardX,
-        cardY,
-        cardWidth,
-        cardHeight,
-        iconX,
-        iconY,
-        iconSize
-      ).draw(ctx, game, powerUpCard);
+        card.x,
+        card.y,
+        card.width,
+        card.height,
+        card.powerUp
+      ).draw(ctx, game);
     }
   }
 
@@ -109,4 +109,4 @@ class PowerUpScreen {
   }
 }
 
-export default PowerUpScreen;
+export default WeaponDropScreen;

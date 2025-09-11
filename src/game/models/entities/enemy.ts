@@ -3,6 +3,8 @@ import type GameEngine from '@/game/core/game-engine';
 import GameEntityObject from './game-entity-object';
 import ExperiencePoint from './drops/experience-point';
 
+import { EXPERIENCE_SIZE } from '@/constants/dimensions';
+
 class Enemy extends GameEntityObject {
   public damage: number;
   public health: number;
@@ -55,8 +57,11 @@ class Enemy extends GameEntityObject {
   public onDeathUpdate(ctx: GameEngine) {
     this.shouldRemove = true;
 
-    const expSpawnX = this.x + this.width / 2 - 16 / 2;
-    const expSpawnY = this.y + this.height / 2 - 16 / 2;
+    const entityMiddleX = this.x + this.width / 2;
+    const entityMiddleY = this.y + this.height / 2;
+
+    const expSpawnX = entityMiddleX - EXPERIENCE_SIZE / 2;
+    const expSpawnY = entityMiddleY - EXPERIENCE_SIZE / 2;
 
     new ExperiencePoint(expSpawnX, expSpawnY, this.experienceDropValue).spawn(
       ctx

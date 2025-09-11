@@ -1,5 +1,5 @@
 import type GameEngine from '@/game/core/game-engine';
-import type { PowerUp } from '@/types/power-ups';
+import type { PowerUp } from '@/types/drops';
 
 export const POWER_UPS: Array<PowerUp> = [
   {

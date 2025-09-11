@@ -1,8 +1,8 @@
 export type MovementKeys = {
-  ArrowUp: boolean;
-  ArrowDown: boolean;
-  ArrowLeft: boolean;
-  ArrowRight: boolean;
+  w: boolean;
+  a: boolean;
+  s: boolean;
+  d: boolean;
 };
 
 export type BasicKeys = {

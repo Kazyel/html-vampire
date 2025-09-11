@@ -2,7 +2,8 @@ export type AvailableEvents =
   | 'healthUpdate'
   | 'killUpdate'
   | 'experienceUpdate'
-  | 'levelUp';
+  | 'levelUp'
+  | 'weaponDrop';
 
 export type GameUIEvent = {
   event: AvailableEvents;
